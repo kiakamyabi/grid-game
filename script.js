@@ -6,7 +6,7 @@ const table = document.createElement('table');
 const numRows = 5;
 const numCols = 5;
 
-const terrain = {};
+const cellFeatures = {};
 
 // const buildings = {
 //     'Farm': 50,
@@ -15,6 +15,7 @@ const terrain = {};
 //   };
 
 //World Map Generation
+function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
     const newRow = document.createElement('tr');
     for (let col = 0; col < numCols; col++) {
@@ -24,11 +25,18 @@ for (let row = 0; row < numRows; row++) {
       colPlusOne = col + 1;
       individualCell.id = `cell-${rowPlusOne}-${colPlusOne}`;
       newRow.appendChild(individualCell);
-      terrain[individualCell.id] = {building: null };
+
+      const terrainType = generateTerrain();
+      cellFeatures[individualCell.id] = {terrainType, building: [] };
+
+      individualCell.setAttribute('data-terrain', terrainType);
     }
     table.appendChild(newRow);
   }
   gameGrid.appendChild(table);
+}
+
+worldGeneration()
 
 //Another version for event listener to trigger on cell click but not dynamic for expanding grid
 //const cellTotal = document.querySelectorAll('.grid-cell');
@@ -44,16 +52,23 @@ for (let row = 0; row < numRows; row++) {
 
 gameGrid.addEventListener('click', handleCellClick);
 
+function generateTerrain() {
+  const terrainTypes = ['grass', 'water', 'mountain', 'forest'];
+  const randomIndex = Math.floor(Math.random() * terrainTypes.length);
+  return terrainTypes[randomIndex];
+}
+
 function handleCellClick(event) {
   const clickedElement = event.target;
   
   if (clickedElement.classList.contains('grid-cell')) {
     const cellId = clickedElement.id;
     console.log('Cell clicked:', cellId);
-    console.log('Buildings:', terrain.building)
+    console.log('Buildings:', cellFeatures[cellId].building)
+    console.log('Terrain:', cellFeatures[cellId].terrainType)
   }
 }
-console.log(terrain)
+console.log(cellFeatures)
 
 
 
