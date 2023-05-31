@@ -108,6 +108,8 @@ function generateBuildingLists(terrainType) {
   function generateMenuContent(terrainType) {
     const menuContent = `<div id="tab-container">
       ${generateTabs()}
+      </div>
+      <div id="building-tab-container">
       ${generateBuildingLists(terrainType)}
     </div>`;
   
@@ -115,6 +117,10 @@ function generateBuildingLists(terrainType) {
   }
 
 function showBuildingList(category) {
+  //Show Building Buttons
+  const buildingTabContainerId = document.getElementById('building-tab-container');
+  buildingTabContainerId.style.display = 'block';
+
   const buildingLists = document.querySelectorAll('.building-list');
   buildingLists.forEach((list) => {
     const listCategory = list.getAttribute('data-category');
@@ -136,6 +142,10 @@ function openCellMenu(cellId) {
   menuContentContainer.innerHTML = menuContent;
 //Show menu
   menuContentContainer.style.display = 'block';
+ //Hide building buttons to show later
+  const buildingTabContainerId = document.getElementById('building-tab-container');
+  buildingTabContainerId.style.display = 'none';
+
 //Event listener for tabs. (Can put as separate function maybe)
   const tabContainer = document.getElementById('tab-container');
   tabContainer.addEventListener('click', (event) => {
