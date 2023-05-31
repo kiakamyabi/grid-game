@@ -1,21 +1,52 @@
 //Store terrain as object along with cell features
 //Solve problem of player building anywhere.
 //Add turns
+//Get buildings into different tabs with better UI
+//Change generation to be procedural instead of random (perlin noise with seeds?)
 const gameGrid = document.getElementById('game-grid')
 const table = document.createElement('table');
 let selectedCellId = null;
 //Configs
-const numRows = 5;
-const numCols = 5;
+const numRows = 10;
+const numCols = 10;
 
 const cellFeatures = {};
 
 const terrainBuildings = {
-  grass: ['Farm'],
-  water: ['Boat Dock', 'Fishing Hut'],
-  mountain: ['Mine', 'Cabin'],
-  forest: ['Lumber Mill', 'Hunting Lodge']
+  grass: [
+    { name: 'Farm', category: 'production' },
+    { name: 'Lumber Mill', category: 'production' },
+    { name: 'Hunting Lodge', category: 'production' }
+  ],
+  water: [
+    { name: 'Boat Dock', category: 'industry' },
+    { name: 'Fishing Hut', category: 'other' }
+  ],
+  mountain: [
+    { name: 'Mine', category: 'industry' },
+    { name: 'Cabin', category: 'other' }
+  ],
+  forest: [
+    { name: 'Lumber Mill', category: 'production' },
+    { name: 'Hunting Lodge', category: 'production' }
+  ]
 };
+
+const buildingCategories = {
+  production: {
+    name: 'Production',
+    buildings: ['Farm', 'Lumber Mill', 'Hunting Lodge']
+  },
+  industry: {
+    name: 'Industry',
+    buildings: ['Mine', 'Boat Dock']
+  },
+  other: {
+    name: 'Other',
+    buildings: ['Fishing Hut', 'Cabin']
+  }
+};
+
 //World Map Generation
 function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
@@ -42,6 +73,7 @@ worldGeneration()
 
 gameGrid.addEventListener('click', handleCellClick);
 
+//Generates terrain randomly
 function generateTerrain() {
   const terrainTypes = ['grass', 'water', 'mountain', 'forest'];
   const randomIndex = Math.floor(Math.random() * terrainTypes.length);
@@ -49,33 +81,73 @@ function generateTerrain() {
 }
 
 ////////////
-// Generate the menu content based on the available buildings for the selected terrain
-function generateMenuContent(terrainType) {
-  const availableBuildings = terrainBuildings[terrainType];
-  let menuContent = '';
 
-  for (const building of availableBuildings) {
-    menuContent += `<button class="building-btn" data-building="${building}">${building}</button>`;
+function generateTabs() {
+  let tabContent = '';
+  for (const category in buildingCategories) {
+    const categoryName = buildingCategories[category].name;
+    tabContent += `<button class="tab" data-category="${category}">${categoryName}</button>`;
   }
+  return tabContent;
+}
 
-    menuContent += `</div>`;
+function generateBuildingLists(terrainType) {
+  let buildingListContent = '';
+  for (const category in buildingCategories) {
+    const buildings = terrainBuildings[terrainType]
+      .filter((building) => building.category === category)
+      .map((building) => building.name);
+    if (buildings.length > 0) {
+      buildingListContent += `<div class="building-list" data-category="${category}">`;
+      for (const building of buildings) {
+        buildingListContent += `<button class="building-btn" data-building="${building}">${building}</button>`;
+      }
+      buildingListContent += `</div>`;
+    }
+  }
+  return buildingListContent;
+}
+
+  function generateMenuContent(terrainType) {
+    const menuContent = `<div class="tab-container">
+      ${generateTabs()}
+      ${generateBuildingLists(terrainType)}
+    </div>`;
+  
     return menuContent;
   }
 
-// Function to open the menu for the selected cell
+function showBuildingList(category) {
+  const buildingLists = document.querySelectorAll('.building-list');
+  buildingLists.forEach((list) => {
+    const listCategory = list.getAttribute('data-category');
+    if (listCategory === category) {
+      list.style.display = 'block';
+    } else {
+      list.style.display = 'none';
+    }
+  });
+}
+
+//Open the menu for selected cell
 function openCellMenu(cellId) {
   const selectedCell = cellFeatures[cellId];
   const terrainType = selectedCell.terrainType;
   const menuContent = generateMenuContent(terrainType);
-
-  // Update the menu content
+//Update menu
   const menuContentContainer = document.getElementById('building-menu');
   menuContentContainer.innerHTML = menuContent;
-
-  // Display the menu
+//Show menu
   menuContentContainer.style.display = 'block';
+
+  const tabs = menuContentContainer.querySelectorAll('.tab');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const category = tab.getAttribute('data-category');
+      showBuildingList(category);
+    });
+  });
 }
-///////////
 
 function handleCellClick(event) {
   const clickedElement = event.target;
