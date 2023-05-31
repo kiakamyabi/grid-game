@@ -1,19 +1,21 @@
 //Store terrain as object along with cell features
-//Solve problem of multiple buildings. Maybe slots?
+//Solve problem of player building anywhere.
+//Add turns
 const gameGrid = document.getElementById('game-grid')
 const table = document.createElement('table');
+let selectedCellId = null;
 //Configs
 const numRows = 5;
 const numCols = 5;
 
 const cellFeatures = {};
 
-// const buildings = {
-//     'Farm': 50,
-//     'Mine': 100,
-//     'Shop': 200
-//   };
-
+const terrainBuildings = {
+  grass: ['Farm'],
+  water: ['Boat Dock', 'Fishing Hut'],
+  mountain: ['Mine', 'Cabin'],
+  forest: ['Lumber Mill', 'Hunting Lodge']
+};
 //World Map Generation
 function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
@@ -38,18 +40,6 @@ for (let row = 0; row < numRows; row++) {
 
 worldGeneration()
 
-//Another version for event listener to trigger on cell click but not dynamic for expanding grid
-//const cellTotal = document.querySelectorAll('.grid-cell');
-
-// cellTotal.forEach(cell => {
-//   cell.addEventListener('click', handleCellClick);
-// });
-
-// function handleCellClick(event){
-//   const cellId = event.target.id;
-//   console.log('Cell clicked:', cellId);
-// }
-
 gameGrid.addEventListener('click', handleCellClick);
 
 function generateTerrain() {
@@ -58,17 +48,54 @@ function generateTerrain() {
   return terrainTypes[randomIndex];
 }
 
+////////////
+// Generate the menu content based on the available buildings for the selected terrain
+function generateMenuContent(terrainType) {
+  const availableBuildings = terrainBuildings[terrainType];
+  let menuContent = '';
+
+  for (const building of availableBuildings) {
+    menuContent += `<button class="building-btn" data-building="${building}">${building}</button>`;
+  }
+
+    menuContent += `</div>`;
+    return menuContent;
+  }
+
+// Function to open the menu for the selected cell
+function openCellMenu(cellId) {
+  const selectedCell = cellFeatures[cellId];
+  const terrainType = selectedCell.terrainType;
+  const menuContent = generateMenuContent(terrainType);
+
+  // Update the menu content
+  const menuContentContainer = document.getElementById('building-menu');
+  menuContentContainer.innerHTML = menuContent;
+
+  // Display the menu
+  menuContentContainer.style.display = 'block';
+}
+///////////
+
 function handleCellClick(event) {
   const clickedElement = event.target;
   
   if (clickedElement.classList.contains('grid-cell')) {
     const cellId = clickedElement.id;
+    selectedCellId = cellId;
     console.log('Cell clicked:', cellId);
     console.log('Buildings:', cellFeatures[cellId].building)
     console.log('Terrain:', cellFeatures[cellId].terrainType)
+    console.log('Current Cell:', selectedCellId)
+
+    openCellMenu(selectedCellId);
   }
 }
 console.log(cellFeatures)
+
+
+
+
 
 
 
