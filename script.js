@@ -3,15 +3,15 @@
 //Add turns
 //Get buildings into different tabs with better UI
 //Change generation to be procedural instead of random (perlin noise with seeds?)
+
+//Data
 const gameGrid = document.getElementById('game-grid')
 const table = document.createElement('table');
 let selectedCellId = null;
+const cellFeatures = {};
 //Configs
 const numRows = 10;
 const numCols = 10;
-
-const cellFeatures = {};
-
 const terrainBuildings = {
   grass: [
     { name: 'Farm', category: 'production' },
@@ -31,7 +31,6 @@ const terrainBuildings = {
     { name: 'Hunting Lodge', category: 'production' }
   ]
 };
-
 const buildingCategories = {
   production: {
     name: 'Production',
@@ -54,9 +53,9 @@ for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
       const individualCell = document.createElement('td');
       individualCell.classList.add('grid-cell');
-      rowPlusOne = row + 1;
-      colPlusOne = col + 1;
-      individualCell.id = `cell-${rowPlusOne}-${colPlusOne}`;
+      rowPlus = row + 1;
+      colPlus = col + 1;
+      individualCell.id = `cell-${rowPlus}-${colPlus}`;
       newRow.appendChild(individualCell);
 
       const terrainType = generateTerrain();
@@ -79,8 +78,6 @@ function generateTerrain() {
   const randomIndex = Math.floor(Math.random() * terrainTypes.length);
   return terrainTypes[randomIndex];
 }
-
-////////////
 
 function generateTabs() {
   let tabContent = '';
@@ -109,7 +106,7 @@ function generateBuildingLists(terrainType) {
 }
 
   function generateMenuContent(terrainType) {
-    const menuContent = `<div class="tab-container">
+    const menuContent = `<div id="tab-container">
       ${generateTabs()}
       ${generateBuildingLists(terrainType)}
     </div>`;
@@ -139,13 +136,14 @@ function openCellMenu(cellId) {
   menuContentContainer.innerHTML = menuContent;
 //Show menu
   menuContentContainer.style.display = 'block';
-
-  const tabs = menuContentContainer.querySelectorAll('.tab');
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const category = tab.getAttribute('data-category');
+//Event listener for tabs. (Can put as separate function maybe)
+  const tabContainer = document.getElementById('tab-container');
+  tabContainer.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target.classList.contains('tab')) {
+      const category = target.getAttribute('data-category');
       showBuildingList(category);
-    });
+    }
   });
 }
 
