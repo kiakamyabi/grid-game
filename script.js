@@ -15,29 +15,54 @@ const numRows = 10;
 const numCols = 10;
 
 const terrainBuildings = {
-  grass: [
-    { name: 'Farm', category: 'production' },
-    { name: 'Lumber Mill', category: 'production' },
-    { name: 'Hunting Lodge', category: 'production' }
-  ],
-  water: [
-    { name: 'Boat Dock', category: 'industry' },
-    { name: 'Fishing Hut', category: 'other' }
-  ],
-  mountain: [
-    { name: 'Mine', category: 'industry' },
-    { name: 'Cabin', category: 'other' }
-  ],
-  forest: [
-    { name: 'Lumber Mill', category: 'production' },
-    { name: 'Hunting Lodge', category: 'production' }
-  ]
+  grass: ['Cabin', 'Farm', 'Hunting Lodge'],
+  water: ['Cabin', 'Saltworks', 'Fishing Dock'],
+  mountain: ['Cabin', 'Mine'],
+  forest: ['Cabin', 'Lumber Mill','Hunting Lodge']
+};
+
+const buildingData = {
+  Cabin: {
+    name: 'Cabin',
+    category: 'other',
+  },
+
+  Farm: {
+    name: 'Farm',
+    category: 'production',
+  },
+
+  HuntingLodge: {
+    name: 'Hunting Lodge',
+    category: 'other',
+  },
+
+  Saltworks: {
+    name: 'Saltworks',
+    category: 'production',
+  },
+
+  LumberMill: {
+    name: 'Lumber Mill',
+    category: 'industry',
+  },
+  
+  FishingDock: {
+    name: 'Fishing Dock',
+    category: 'production',
+  },
+
+  Mine: {
+    name: 'Mine',
+    category: 'production',
+  },
+
 };
 
 const buildingCategories = {
   production: {
     name: 'Production',
-    buildings: ['Farm', 'Lumber Mill', 'Hunting Lodge']
+    buildings: ['Farm', 'Lumber Mill', 'Hunting Lodge', 'Mine']
   },
   industry: {
     name: 'Industry',
@@ -93,23 +118,24 @@ function generateTabs() {
   return tabContent;
 }
 
-//Used in generateMenuContent
+//Utility. Used in generateMenuContent.
 function generateBuildingLists(terrainType) {
   let buildingListContent = '';
   for (const category in buildingCategories) {
-    const buildings = terrainBuildings[terrainType]
-      .filter((building) => building.category === category)
-      .map((building) => building.name);
+    const buildings = Object.values(buildingData)
+      .filter((building) => building.category === category && terrainBuildings[terrainType].includes(building.name));
+
     if (buildings.length > 0) {
       buildingListContent += `<div class="building-list" data-category="${category}">`;
       for (const building of buildings) {
-        buildingListContent += `<button class="building-btn" data-building="${building}">${building}</button>`;
+        buildingListContent += `<button class="building-btn" data-building="${building.name}">${building.name}</button>`;
       }
       buildingListContent += `</div>`;
     }
   }
   return buildingListContent;
 }
+
 //terrainType = The terrain type associated with specific cell based on id, stored in cellFeatures.
 function generateMenuContent(terrainType) {
   const menuContent = 
@@ -117,7 +143,7 @@ function generateMenuContent(terrainType) {
     ${generateTabs()}
     </div>
 
-  <div id="building-tab-container">
+  <div id="buildings-tab-container">
     ${generateBuildingLists(terrainType)}
   </div>`;
 
@@ -125,9 +151,9 @@ function generateMenuContent(terrainType) {
 }
 
 function showBuildingList(category) {
-  //Show Building Buttons
-  const buildingTabContainerId = document.getElementById('building-tab-container');
-  buildingTabContainerId.style.display = 'block';
+  //Show building buttons
+  const buildingsTabContainerId = document.getElementById('buildings-tab-container');
+  buildingsTabContainerId.style.display = 'block';
 
   const buildingLists = document.querySelectorAll('.building-list');
   buildingLists.forEach((list) => {
@@ -151,8 +177,8 @@ function openCellMenu(cellId) {
 //Show menu
   menuContentContainer.style.display = 'block';
  //Hide building buttons to show later
-  const buildingTabContainerId = document.getElementById('building-tab-container');
-  buildingTabContainerId.style.display = 'none';
+  const buildingsTabContainerId = document.getElementById('buildings-tab-container');
+  buildingsTabContainerId.style.display = 'none';
 
 //Event listener for tabs. (Can put as separate function maybe)
   const tabContainer = document.getElementById('tab-container');
