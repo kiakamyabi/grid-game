@@ -3,6 +3,7 @@
 //Add turns
 //Get buildings into different tabs with better UI
 //Change generation to be procedural instead of random (perlin noise with seeds?)
+//Position menu properly so its always visible
 
 //Data
 const gameGrid = document.getElementById('game-grid')
@@ -12,6 +13,7 @@ const cellFeatures = {};
 //Configs
 const numRows = 10;
 const numCols = 10;
+
 const terrainBuildings = {
   grass: [
     { name: 'Farm', category: 'production' },
@@ -31,6 +33,7 @@ const terrainBuildings = {
     { name: 'Hunting Lodge', category: 'production' }
   ]
 };
+
 const buildingCategories = {
   production: {
     name: 'Production',
@@ -53,6 +56,7 @@ for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
       const individualCell = document.createElement('td');
       individualCell.classList.add('grid-cell');
+      //Plus one to the id because the count starts at zero
       rowPlus = row + 1;
       colPlus = col + 1;
       individualCell.id = `cell-${rowPlus}-${colPlus}`;
@@ -67,7 +71,7 @@ for (let row = 0; row < numRows; row++) {
   }
   gameGrid.appendChild(table);
 }
-
+//Need to make button for game start
 worldGeneration()
 
 gameGrid.addEventListener('click', handleCellClick);
@@ -79,6 +83,7 @@ function generateTerrain() {
   return terrainTypes[randomIndex];
 }
 
+//Generates the tabs for the building categories
 function generateTabs() {
   let tabContent = '';
   for (const category in buildingCategories) {
@@ -88,6 +93,7 @@ function generateTabs() {
   return tabContent;
 }
 
+//Used in generateMenuContent
 function generateBuildingLists(terrainType) {
   let buildingListContent = '';
   for (const category in buildingCategories) {
@@ -104,17 +110,19 @@ function generateBuildingLists(terrainType) {
   }
   return buildingListContent;
 }
+//terrainType = The terrain type associated with specific cell based on id, stored in cellFeatures.
+function generateMenuContent(terrainType) {
+  const menuContent = 
+  `<div id="tab-container">
+    ${generateTabs()}
+    </div>
 
-  function generateMenuContent(terrainType) {
-    const menuContent = `<div id="tab-container">
-      ${generateTabs()}
-      </div>
-      <div id="building-tab-container">
-      ${generateBuildingLists(terrainType)}
-    </div>`;
-  
-    return menuContent;
-  }
+  <div id="building-tab-container">
+    ${generateBuildingLists(terrainType)}
+  </div>`;
+
+  return menuContent;
+}
 
 function showBuildingList(category) {
   //Show Building Buttons
