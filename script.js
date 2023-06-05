@@ -1,4 +1,3 @@
-//Store terrain as object along with cell features
 //Solve problem of player building anywhere.
 //Add turns
 //Get buildings into different tabs with better UI
@@ -19,6 +18,21 @@ const terrainBuildings = {
   water: ['Cabin', 'Saltworks', 'Fishing Dock'],
   mountain: ['Cabin', 'Mine'],
   forest: ['Cabin', 'Lumber Mill','Hunting Lodge']
+};
+
+const buildingCategories = {
+  production: {
+    name: 'Production'
+    // buildings:
+  },
+  industry: {
+    name: 'Industry'
+    // buildings: 
+  },
+  other: {
+    name: 'Other'
+    // buildings: 
+  }
 };
 
 const buildingData = {
@@ -59,21 +73,6 @@ const buildingData = {
 
 };
 
-const buildingCategories = {
-  production: {
-    name: 'Production',
-    buildings: ['Farm', 'Lumber Mill', 'Hunting Lodge', 'Mine']
-  },
-  industry: {
-    name: 'Industry',
-    buildings: ['Mine', 'Boat Dock']
-  },
-  other: {
-    name: 'Other',
-    buildings: ['Fishing Hut', 'Cabin']
-  }
-};
-
 //World Map Generation
 function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
@@ -88,7 +87,35 @@ for (let row = 0; row < numRows; row++) {
       newRow.appendChild(individualCell);
 
       const terrainType = generateTerrain();
-      cellFeatures[individualCell.id] = {terrainType, building: [] };
+      cellFeatures[individualCell.id] = {
+        terrainType,
+        building: [],
+        storage: {
+          TreeLogs: {
+            name:'Tree Logs',
+            categoryEconomicSector: 'Primary',
+            categoryGrouping: 'Wood',
+            categoryTier: '1',
+            amount: 0,
+          },
+          Lumber: {
+            name:'Lumber',
+            categoryEconomicSector: 'Secondary',
+            categoryGrouping: ['Wood'],
+            categoryTier: '2',
+            amount: 0,
+          },
+          WoodenChair: {
+            name:'Wooden Chair',
+            categoryEconomicSector: 'Secondary',
+            categoryGrouping: ['Wood'],
+            categoryTier: '3',
+            amount: 0,
+          },
+
+        },
+
+      };
 
       individualCell.setAttribute('data-terrain', terrainType);
     }
@@ -200,6 +227,7 @@ function handleCellClick(event) {
     console.log('Cell clicked:', cellId);
     console.log('Buildings:', cellFeatures[cellId].building)
     console.log('Terrain:', cellFeatures[cellId].terrainType)
+    console.log('In storage:', cellFeatures[cellId].storage)
     console.log('Current Cell:', selectedCellId)
 
     openCellMenu(selectedCellId);
