@@ -73,6 +73,30 @@ const buildingData = {
 
 };
 
+const resourceTypes = {
+  TreeLogs: {
+    name: 'Tree Logs',
+    categoryEconomicSector: 'Primary',
+    categoryGrouping: 'Wood',
+    categoryTier: '1',
+    amount: 0,
+  },
+  Lumber: {
+    name: 'Lumber',
+    categoryEconomicSector: 'Secondary',
+    categoryGrouping: ['Wood'],
+    categoryTier: '2',
+    amount: 0,
+  },
+  WoodenChair: {
+    name: 'Wooden Chair',
+    categoryEconomicSector: 'Secondary',
+    categoryGrouping: ['Wood'],
+    categoryTier: '3',
+    amount: 0,
+  },
+};
+
 //World Map Generation
 function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
@@ -90,30 +114,7 @@ for (let row = 0; row < numRows; row++) {
       cellFeatures[individualCell.id] = {
         terrainType,
         building: [],
-        storage: {
-          TreeLogs: {
-            name:'Tree Logs',
-            categoryEconomicSector: 'Primary',
-            categoryGrouping: 'Wood',
-            categoryTier: '1',
-            amount: 0,
-          },
-          Lumber: {
-            name:'Lumber',
-            categoryEconomicSector: 'Secondary',
-            categoryGrouping: ['Wood'],
-            categoryTier: '2',
-            amount: 0,
-          },
-          WoodenChair: {
-            name:'Wooden Chair',
-            categoryEconomicSector: 'Secondary',
-            categoryGrouping: ['Wood'],
-            categoryTier: '3',
-            amount: 0,
-          },
-
-        },
+        storage: { ...resourceTypes }
 
       };
 
