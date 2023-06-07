@@ -158,7 +158,7 @@ for (let row = 0; row < numRows; row++) {
       const terrainType = generateTerrain();
       cellFeatures[individualCell.id] = {
         terrainType,
-        building: [],
+        buildings: [],
         storage: { ...resourceTypes }
 
       };
@@ -306,20 +306,21 @@ function handleCellClick(event) {
 
     //Console logs for testing
     console.log('Cell clicked:', cellId);
-    console.log('Buildings:', cellFeatures[cellId].building)
+    console.log('Buildings:', cellFeatures[cellId].buildings)
     console.log('Terrain:', cellFeatures[cellId].terrainType)
     console.log('In storage:', cellFeatures[cellId].storage)
     console.log('Current Cell:', selectedCellId)
+    
   }  else if (clickedElement.classList.contains('building-btn')) {
     const buildingName = clickedElement.getAttribute('data-building');
 
     if (selectedCellId) {
       const cell = cellFeatures[selectedCellId];
       //Add building to cellFeatures
-      cell.building.push(buildingName);
+      cell.buildings.push(buildingName);
       //Console log to confirm the building is added to the cell
       console.log(`Building ${buildingName} added to ${selectedCellId}`);
-      console.log('Buildings:', cell.building);
+      console.log('Buildings:', cell.buildings);
     }
   }
 }
