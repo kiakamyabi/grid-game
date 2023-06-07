@@ -20,10 +20,10 @@ const numRows = 10;
 const numCols = 10;
 
 const terrainBuildings = {
-  Grass: ['Cabin', 'Farm', 'HuntingLodge'],
-  Water: ['Cabin', 'Saltworks', 'FishingDock'],
+  Grass: ['Cabin', 'Farm', 'Hunting Lodge'],
+  Water: ['Cabin', 'Saltworks', 'Fishing Dock'],
   Mountain: ['Cabin', 'Mine'],
-  Forest: ['Cabin', 'LumberMill', 'HuntingLodge', 'LoggingShack']
+  Forest: ['Cabin', 'Lumber Mill', 'Hunting Lodge', 'Logging Shack']
 };
 
 const buildingCategories = {
@@ -39,55 +39,55 @@ const buildingCategories = {
 };
 
 const buildingData = {
-  Cabin: {
+  'Cabin': {
     name: 'Cabin',
     category: 'Other',
     resourcesGenerated: {},
     resourcesConsumed: {},
   },
-  Farm: {
+  'Farm': {
     name: 'Farm',
     category: 'Production',
     resourcesGenerated: {},
     resourcesConsumed: {},
   },
-  HuntingLodge: {
-    name: 'HuntingLodge',
+  'Hunting Lodge': {
+    name: 'Hunting Lodge',
     category: 'Other',
     resourcesGenerated: {},
     resourcesConsumed: {},
   },
-  Saltworks: {
+  'Saltworks': {
     name: 'Saltworks',
     category: 'Production',
     resourcesGenerated: {},
     resourcesConsumed: {},
   },
-  LumberMill: {
-    name: 'LumberMill',
+  'Lumber Mill': {
+    name: 'Lumber Mill',
     category: 'Industry',
     resourcesGenerated: {
       'Lumber': 1
     },
     resourcesConsumed: {
-      'TreeLogs': 1,
+      'Tree Logs': 1,
     },
   },
-  LoggingShack: {
-    name: 'LoggingShack',
+  'Logging Shack': {
+    name: 'Logging Shack',
     category: 'Industry',
     resourcesGenerated: {
-      'TreeLogs': 1
+      'Tree Logs': 1
     },
     resourcesConsumed: {},
   },
-  FishingDock: {
-    name: 'FishingDock',
+  'Fishing Dock': {
+    name: 'Fishing Dock',
     category: 'Production',
     resourcesGenerated: {},
     resourcesConsumed: {},
   },
-  Mine: {
+  'Mine': {
     name: 'Mine',
     category: 'Production',
     resourcesGenerated: {},
@@ -98,14 +98,7 @@ const resourceTypes = {
 //categoryEconomicSector based on https://en.wikipedia.org/wiki/Economic_sector.
 //categoryGrouping = Grouping certain resources together for easy filtering e.g Wooden Chair in the Furniture category and Wood category.
 //categoryTier = Each level above 1 represents how far down a production chain a resource is e.g Lumber made from Tree Logs = T2.
-  TreeLogs: {
-    name: 'Tree Logs',
-    categoryEconomicSector: 'Primary',
-    categoryGrouping: ['Wood'],
-    categoryTier: '1',
-    amount: 0,
-  },
-  TreeLogs: {
+  'Tree Logs': {
     name: 'Tree Logs',
     categoryEconomicSector: 'Primary',
     categoryGrouping: ['Wood'],
@@ -113,7 +106,7 @@ const resourceTypes = {
     amount: 0,
   },
 
-  Lumber: {
+  'Lumber': {
     name: 'Lumber',
     categoryEconomicSector: 'Secondary',
     categoryGrouping: ['Wood'],
@@ -121,7 +114,7 @@ const resourceTypes = {
     amount: 0,
   },
 
-  WoodenChair: {
+  'Wooden Chair': {
     name: 'Wooden Chair',
     categoryEconomicSector: 'Secondary',
     categoryGrouping: ['Wood'],
