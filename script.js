@@ -7,8 +7,8 @@
 
 //Data
 const gameGrid = document.getElementById('game-grid')
-const table = document.createElement('table');
 const buildingMenu = document.getElementById('building-menu')
+const table = document.createElement('table');
 let selectedCellId = null;
 const cellFeatures = {};
 let currentTurn = 0;
@@ -16,7 +16,9 @@ let currentTurn = 0;
 //Configs
 const numRows = 10;
 const numCols = 10;
-
+//
+const cellFeaturesBuildingsKey = 'gibberish';
+//
 const terrainBuildings = {
   grass: ['Cabin', 'Farm', 'Hunting Lodge'],
   water: ['Cabin', 'Saltworks', 'Fishing Dock'],
@@ -158,7 +160,7 @@ for (let row = 0; row < numRows; row++) {
       const terrainType = generateTerrain();
       cellFeatures[individualCell.id] = {
         terrainType,
-        buildings: [],
+        [cellFeaturesBuildingsKey]: [],
         storage: { ...resourceTypes }
 
       };
@@ -306,7 +308,7 @@ function handleCellClick(event) {
 
     //Console logs for testing
     console.log('Cell clicked:', cellId);
-    console.log('Buildings:', cellFeatures[cellId].buildings)
+    console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
     console.log('Terrain:', cellFeatures[cellId].terrainType)
     console.log('In storage:', cellFeatures[cellId].storage)
     console.log('Current Cell:', selectedCellId)
@@ -317,10 +319,10 @@ function handleCellClick(event) {
     if (selectedCellId) {
       const cell = cellFeatures[selectedCellId];
       //Add building to cellFeatures
-      cell.buildings.push(buildingName);
+      cell[cellFeaturesBuildingsKey].push(buildingName);
       //Console log to confirm the building is added to the cell
       console.log(`Building ${buildingName} added to ${selectedCellId}`);
-      console.log('Buildings:', cell.buildings);
+      console.log('Buildings:', cell[cellFeaturesBuildingsKey]);
     }
   }
 }
