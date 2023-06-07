@@ -1,8 +1,9 @@
-//Solve problem of player building anywhere.
-//Add turns
+//Solve problem of player building anywhere. 
+//Add construction build times
 //Get buildings into different tabs with better UI
 //Change generation to be procedural instead of random (perlin noise with seeds?)
 //Position menu properly so its always visible
+//Decide on buildings limit
 
 //Data
 const gameGrid = document.getElementById('game-grid')
@@ -314,19 +315,11 @@ function handleCellClick(event) {
 
     if (selectedCellId) {
       const cell = cellFeatures[selectedCellId];
-
-      // Check if the building is allowed on the cell's terrain
-      if (terrainBuildings[cell.terrainType].includes(buildingName)) {
-        // Add the building to the cell's buildings array
-        cell.building.push(buildingName);
-
-        // Console log to confirm the building is added to the cell
-        console.log(`Building ${buildingName} added to cell ${selectedCellId}`);
-        console.log('Buildings:', cell.building);
-      } else {
-        // The building is not allowed on the cell's terrain
-        console.log(`Cannot build ${buildingName} on ${cell.terrainType}`);
-      }
+      //Add building to cellFeatures
+      cell.building.push(buildingName);
+      //Console log to confirm the building is added to the cell
+      console.log(`Building ${buildingName} added to ${selectedCellId}`);
+      console.log('Buildings:', cell.building);
     }
   }
 }
