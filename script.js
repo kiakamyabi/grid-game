@@ -7,8 +7,11 @@
 //Data
 const gameGrid = document.getElementById('game-grid')
 const table = document.createElement('table');
+const buildingMenu = document.getElementById('building-menu')
 let selectedCellId = null;
 const cellFeatures = {};
+let currentTurn = 0;
+
 //Configs
 const numRows = 10;
 const numCols = 10;
@@ -39,26 +42,64 @@ const buildingData = {
   Cabin: {
     name: 'Cabin',
     category: 'other',
+    resourceGeneration:{
+
+    },
+    resourcesConsumed: {
+
+    },
   },
 
   Farm: {
     name: 'Farm',
     category: 'production',
+    resourceGeneration:{
+
+    },
+    resourcesConsumed: {
+
+    },
   },
 
   HuntingLodge: {
     name: 'Hunting Lodge',
     category: 'other',
+    resourceGeneration:{
+
+    },
+    resourcesConsumed: {
+
+    },
   },
 
   Saltworks: {
     name: 'Saltworks',
     category: 'production',
+    resourceGeneration:{
+
+    },
+    resourcesConsumed: {
+
+    },
   },
 
   LumberMill: {
     name: 'Lumber Mill',
     category: 'industry',
+    resourceGeneration:{
+      'Lumber': 1
+    },
+    resourcesConsumed: {
+      'Tree Logs': 1,
+    },
+  },
+
+  LoggingShack: {
+    name: 'Logging Shack',
+    category: 'industry',
+    resourceGeneration:{
+      'Tree Logs': 1
+    },
   },
   
   FishingDock: {
@@ -74,10 +115,13 @@ const buildingData = {
 };
 
 const resourceTypes = {
+//categoryEconomicSector based on https://en.wikipedia.org/wiki/Economic_sector.
+//categoryGrouping = Grouping certain resources together for easy filtering e.g Wooden Chair in the Furniture category and Wood category.
+//categoryTier = Each level above 1 represents how far down a production chain a resource is e.g Lumber made from Tree Logs = T2.
   TreeLogs: {
     name: 'Tree Logs',
     categoryEconomicSector: 'Primary',
-    categoryGrouping: 'Wood',
+    categoryGrouping: ['Wood'],
     categoryTier: '1',
     amount: 0,
   },
@@ -128,6 +172,7 @@ for (let row = 0; row < numRows; row++) {
 worldGeneration()
 
 gameGrid.addEventListener('click', handleCellClick);
+buildingMenu.addEventListener('click', handleCellClick);
 
 //Generates terrain randomly
 function generateTerrain() {
@@ -146,7 +191,7 @@ function generateTabs() {
   return tabContent;
 }
 
-//Utility. Used in generateMenuContent.
+//Used in generateMenuContent.
 function generateBuildingLists(terrainType) {
   let buildingListContent = '';
   for (const category in buildingCategories) {
@@ -164,6 +209,7 @@ function generateBuildingLists(terrainType) {
   return buildingListContent;
 }
 
+//Makes the actual 'menu'
 //terrainType = The terrain type associated with specific cell based on id, stored in cellFeatures.
 function generateMenuContent(terrainType) {
   const menuContent = 
@@ -193,6 +239,35 @@ function showBuildingList(category) {
     }
   });
 }
+
+//
+function resourceChangePerTurn() {
+  for (const cellId in cellFeatures) {
+    const cell = cellFeatures[cellId];
+    const buildingsInCell = cell.buildings;
+
+    for (const building of buildingsInCell) {
+      const resourcesGenerated = buildingData[building].resourcesGenerated;
+      const resourcesConsumed = buildingData[building].resourcesConsumed;
+
+      //Generate resources
+      for (const resource in resourcesGenerated) {
+        cell.storage[resource].amount += resourcesGenerated[resource];
+      }
+
+      //Consume resources
+      for (const resource in resourcesConsumed) {
+        const requiredAmount = resourcesConsumed[resource];
+        if (cell.storage[resource].amount >= requiredAmount) {
+          cell.storage[resource].amount -= requiredAmount;
+        } else {
+          //Handle no resources
+        }
+      }
+    }
+  }
+}
+//
 
 //Open the menu for selected cell
 function openCellMenu(cellId) {
@@ -225,16 +300,50 @@ function handleCellClick(event) {
   if (clickedElement.classList.contains('grid-cell')) {
     const cellId = clickedElement.id;
     selectedCellId = cellId;
+
+    openCellMenu(selectedCellId);
+
+    //Console logs for testing
     console.log('Cell clicked:', cellId);
     console.log('Buildings:', cellFeatures[cellId].building)
     console.log('Terrain:', cellFeatures[cellId].terrainType)
     console.log('In storage:', cellFeatures[cellId].storage)
     console.log('Current Cell:', selectedCellId)
+  }  else if (clickedElement.classList.contains('building-btn')) {
+    const buildingName = clickedElement.getAttribute('data-building');
 
-    openCellMenu(selectedCellId);
+    if (selectedCellId) {
+      const cell = cellFeatures[selectedCellId];
+
+      // Check if the building is allowed on the cell's terrain
+      if (terrainBuildings[cell.terrainType].includes(buildingName)) {
+        // Add the building to the cell's buildings array
+        cell.building.push(buildingName);
+
+        // Remove the building from the available building list
+        clickedElement.disabled = true;
+        clickedElement.classList.add('disabled');
+
+        // Console log to confirm the building is added to the cell
+        console.log(`Building ${buildingName} added to cell ${selectedCellId}`);
+        console.log('Buildings:', cell.building);
+      } else {
+        // The building is not allowed on the cell's terrain
+        console.log(`Cannot build ${buildingName} on ${cell.terrainType}`);
+      }
+    }
   }
 }
-console.log(cellFeatures)
+
+//
+//Advance the turn and trigger end of turn changes
+function advanceTurn() {
+  turn++;
+  resourceChangePerTurn()
+  console.log(`Turn: ${currentTurn}`);
+  console.log(cellFeatures);
+}
+//
 
 
 
