@@ -6,7 +6,7 @@
 //Decide on buildings limit
 
 //Data
-const gameGrid = document.getElementById('game-grid')
+const gameWorld = document.getElementById('game-grid')
 const buildingMenu = document.getElementById('building-menu')
 const table = document.createElement('table');
 let selectedCellId = null;
@@ -16,28 +16,26 @@ let currentTurn = 0;
 //Configs
 const numRows = 10;
 const numCols = 10;
-//
+//Keys
 const cellFeaturesBuildingsKey = 'buildings';
-//
+const cellFeaturesStorageKey = 'storage';
+
 const terrainBuildings = {
-  grass: ['Cabin', 'Farm', 'Hunting Lodge'],
-  water: ['Cabin', 'Saltworks', 'Fishing Dock'],
-  mountain: ['Cabin', 'Mine'],
-  forest: ['Cabin', 'Lumber Mill','Hunting Lodge']
+  Grass: ['Cabin', 'Farm', 'Hunting Lodge'],
+  Water: ['Cabin', 'Saltworks', 'Fishing Dock'],
+  Mountain: ['Cabin', 'Mine'],
+  Forest: ['Cabin', 'Lumber Mill','Hunting Lodge']
 };
 
 const buildingCategories = {
   production: {
     name: 'Production'
-    // buildings:
   },
   industry: {
     name: 'Industry'
-    // buildings: 
   },
   other: {
     name: 'Other'
-    // buildings: 
   }
 };
 
@@ -161,7 +159,7 @@ for (let row = 0; row < numRows; row++) {
       cellFeatures[individualCell.id] = {
         terrainType,
         [cellFeaturesBuildingsKey]: [],
-        storage: { ...resourceTypes }
+        [cellFeaturesStorageKey]: { ...resourceTypes }
 
       };
 
@@ -169,17 +167,17 @@ for (let row = 0; row < numRows; row++) {
     }
     table.appendChild(newRow);
   }
-  gameGrid.appendChild(table);
+  gameWorld.appendChild(table);
 }
 //Need to make button for game start
 worldGeneration()
 
-gameGrid.addEventListener('click', handleCellClick);
+gameWorld.addEventListener('click', handleCellClick);
 buildingMenu.addEventListener('click', handleCellClick);
 
 //Generates terrain randomly
 function generateTerrain() {
-  const terrainTypes = ['grass', 'water', 'mountain', 'forest'];
+  const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest'];
   const randomIndex = Math.floor(Math.random() * terrainTypes.length);
   return terrainTypes[randomIndex];
 }
@@ -255,14 +253,14 @@ function resourceChangePerTurn() {
 
       //Generate resources
       for (const resource in resourcesGenerated) {
-        cell.storage[resource].amount += resourcesGenerated[resource];
+        cell[cellFeaturesStorageKey][resource].amount += resourcesGenerated[resource];
       }
 
       //Consume resources
       for (const resource in resourcesConsumed) {
         const requiredAmount = resourcesConsumed[resource];
-        if (cell.storage[resource].amount >= requiredAmount) {
-          cell.storage[resource].amount -= requiredAmount;
+        if (cell[cellFeaturesStorageKey][resource].amount >= requiredAmount) {
+          cell[cellFeaturesStorageKey][resource].amount -= requiredAmount;
         } else {
           //Handle no resources
         }
@@ -310,7 +308,7 @@ function handleCellClick(event) {
     console.log('Cell clicked:', cellId);
     console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
     console.log('Terrain:', cellFeatures[cellId].terrainType)
-    console.log('In storage:', cellFeatures[cellId].storage)
+    console.log('In storage:', cellFeatures[cellId][cellFeaturesStorageKey])
     console.log('Current Cell:', selectedCellId)
     
   }  else if (clickedElement.classList.contains('building-btn')) {
