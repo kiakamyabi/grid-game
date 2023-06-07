@@ -17,7 +17,7 @@ let currentTurn = 0;
 const numRows = 10;
 const numCols = 10;
 //
-const cellFeaturesBuildingsKey = 'gibberish';
+const cellFeaturesBuildingsKey = 'buildings';
 //
 const terrainBuildings = {
   grass: ['Cabin', 'Farm', 'Hunting Lodge'],
