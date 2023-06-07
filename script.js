@@ -12,29 +12,28 @@ const table = document.createElement('table');
 let selectedCellId = null;
 const cellFeatures = {};
 let currentTurn = 0;
-
-//Configs
-const numRows = 10;
-const numCols = 10;
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesStorageKey = 'storage';
+//Configs
+const numRows = 10;
+const numCols = 10;
 
 const terrainBuildings = {
-  Grass: ['Cabin', 'Farm', 'Hunting Lodge'],
-  Water: ['Cabin', 'Saltworks', 'Fishing Dock'],
+  Grass: ['Cabin', 'Farm', 'HuntingLodge'],
+  Water: ['Cabin', 'Saltworks', 'FishingDock'],
   Mountain: ['Cabin', 'Mine'],
-  Forest: ['Cabin', 'Lumber Mill','Hunting Lodge']
+  Forest: ['Cabin', 'LumberMill', 'HuntingLodge', 'LoggingShack']
 };
 
 const buildingCategories = {
-  production: {
+  Production: {
     name: 'Production'
   },
-  industry: {
+  Industry: {
     name: 'Industry'
   },
-  other: {
+  Other: {
     name: 'Other'
   }
 };
@@ -42,79 +41,59 @@ const buildingCategories = {
 const buildingData = {
   Cabin: {
     name: 'Cabin',
-    category: 'other',
-    resourceGeneration:{
-
-    },
-    resourcesConsumed: {
-
-    },
+    category: 'Other',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
   },
-
   Farm: {
     name: 'Farm',
-    category: 'production',
-    resourceGeneration:{
-
-    },
-    resourcesConsumed: {
-
-    },
+    category: 'Production',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
   },
-
   HuntingLodge: {
-    name: 'Hunting Lodge',
-    category: 'other',
-    resourceGeneration:{
-
-    },
-    resourcesConsumed: {
-
-    },
+    name: 'HuntingLodge',
+    category: 'Other',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
   },
-
   Saltworks: {
     name: 'Saltworks',
-    category: 'production',
-    resourceGeneration:{
-
-    },
-    resourcesConsumed: {
-
-    },
+    category: 'Production',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
   },
-
   LumberMill: {
-    name: 'Lumber Mill',
-    category: 'industry',
-    resourceGeneration:{
+    name: 'LumberMill',
+    category: 'Industry',
+    resourcesGenerated: {
       'Lumber': 1
     },
     resourcesConsumed: {
-      'Tree Logs': 1,
+      'TreeLogs': 1,
     },
   },
-
   LoggingShack: {
-    name: 'Logging Shack',
-    category: 'industry',
-    resourceGeneration:{
-      'Tree Logs': 1
+    name: 'LoggingShack',
+    category: 'Industry',
+    resourcesGenerated: {
+      'TreeLogs': 1
     },
+    resourcesConsumed: {},
   },
-  
   FishingDock: {
-    name: 'Fishing Dock',
-    category: 'production',
+    name: 'FishingDock',
+    category: 'Production',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
   },
-
   Mine: {
     name: 'Mine',
-    category: 'production',
+    category: 'Production',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
   },
-
 };
-
 const resourceTypes = {
 //categoryEconomicSector based on https://en.wikipedia.org/wiki/Economic_sector.
 //categoryGrouping = Grouping certain resources together for easy filtering e.g Wooden Chair in the Furniture category and Wood category.
@@ -126,6 +105,14 @@ const resourceTypes = {
     categoryTier: '1',
     amount: 0,
   },
+  TreeLogs: {
+    name: 'Tree Logs',
+    categoryEconomicSector: 'Primary',
+    categoryGrouping: ['Wood'],
+    categoryTier: '1',
+    amount: 0,
+  },
+
   Lumber: {
     name: 'Lumber',
     categoryEconomicSector: 'Secondary',
@@ -133,6 +120,7 @@ const resourceTypes = {
     categoryTier: '2',
     amount: 0,
   },
+
   WoodenChair: {
     name: 'Wooden Chair',
     categoryEconomicSector: 'Secondary',
@@ -159,7 +147,7 @@ for (let row = 0; row < numRows; row++) {
       cellFeatures[individualCell.id] = {
         terrainType,
         [cellFeaturesBuildingsKey]: [],
-        [cellFeaturesStorageKey]: { ...resourceTypes }
+        [cellFeaturesStorageKey]: JSON.parse(JSON.stringify(resourceTypes))
 
       };
 
@@ -169,11 +157,6 @@ for (let row = 0; row < numRows; row++) {
   }
   gameWorld.appendChild(table);
 }
-//Need to make button for game start
-worldGeneration()
-
-gameWorld.addEventListener('click', handleCellClick);
-buildingMenu.addEventListener('click', handleCellClick);
 
 //Generates terrain randomly
 function generateTerrain() {
@@ -241,35 +224,6 @@ function showBuildingList(category) {
   });
 }
 
-//
-function resourceChangePerTurn() {
-  for (const cellId in cellFeatures) {
-    const cell = cellFeatures[cellId];
-    const buildingsInCell = cell.buildings;
-
-    for (const building of buildingsInCell) {
-      const resourcesGenerated = buildingData[building].resourcesGenerated;
-      const resourcesConsumed = buildingData[building].resourcesConsumed;
-
-      //Generate resources
-      for (const resource in resourcesGenerated) {
-        cell[cellFeaturesStorageKey][resource].amount += resourcesGenerated[resource];
-      }
-
-      //Consume resources
-      for (const resource in resourcesConsumed) {
-        const requiredAmount = resourcesConsumed[resource];
-        if (cell[cellFeaturesStorageKey][resource].amount >= requiredAmount) {
-          cell[cellFeaturesStorageKey][resource].amount -= requiredAmount;
-        } else {
-          //Handle no resources
-        }
-      }
-    }
-  }
-}
-//
-
 //Open the menu for selected cell
 function openCellMenu(cellId) {
   const selectedCell = cellFeatures[cellId];
@@ -325,15 +279,45 @@ function handleCellClick(event) {
   }
 }
 
-//
+function resourceChangePerTurn() {
+  //Loop through all cells
+  for (const cellId in cellFeatures) {
+    const cell = cellFeatures[cellId];
+    const buildings = cell[cellFeaturesBuildingsKey];
+
+    //Loop through buildings in all cells
+    for (const building of buildings) {
+      const buildingInfo = buildingData[building];
+
+      //Handle resource generation
+      for (const resource in buildingInfo.resourcesGenerated) {
+        const amount = buildingInfo.resourcesGenerated[resource];
+        cell[cellFeaturesStorageKey][resource].amount += amount; 
+      }
+
+      //Handle resource consumption
+      for (const resource in buildingInfo.resourcesConsumed) {
+        const amount = buildingInfo.resourcesConsumed[resource];
+        cell[cellFeaturesStorageKey][resource].amount -= amount;
+      }
+    }
+  }
+}
+
+
 //Advance the turn and trigger end of turn changes
 function advanceTurn() {
-  turn++;
+  currentTurn++;
   resourceChangePerTurn()
   console.log(`Turn: ${currentTurn}`);
   console.log(cellFeatures);
 }
-//
+
+//Need to make button for game start
+worldGeneration()
+
+gameWorld.addEventListener('click', handleCellClick);
+buildingMenu.addEventListener('click', handleCellClick);
 
 
 
