@@ -320,10 +320,6 @@ function handleCellClick(event) {
         // Add the building to the cell's buildings array
         cell.building.push(buildingName);
 
-        // Remove the building from the available building list
-        clickedElement.disabled = true;
-        clickedElement.classList.add('disabled');
-
         // Console log to confirm the building is added to the cell
         console.log(`Building ${buildingName} added to cell ${selectedCellId}`);
         console.log('Buildings:', cell.building);
