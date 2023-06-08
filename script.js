@@ -4,6 +4,7 @@
 //Change generation to be procedural instead of random (perlin noise with seeds?)
 //Position menu properly so its always visible
 //Decide on buildings limit
+//Put configs and stuff in another file at some point
 
 //Data
 const gameWorld = document.getElementById('game-grid')
@@ -14,16 +15,16 @@ const cellFeatures = {};
 let currentTurn = 0;
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
-const cellFeaturesStorageKey = 'storage';
+const cellFeaturesCapacityKey = 'storageCapacity';
 //Configs
 const numRows = 10;
 const numCols = 10;
 
 const terrainBuildings = {
-  Grass: ['Cabin', 'Farm', 'Hunting Lodge'],
-  Water: ['Cabin', 'Saltworks', 'Fishing Dock'],
-  Mountain: ['Cabin', 'Mine'],
-  Forest: ['Cabin', 'Lumber Mill', 'Hunting Lodge', 'Logging Shack']
+  Grass: ['Cabin', 'Farm', 'Hunting Lodge', 'Warehouse'],
+  Water: ['Cabin', 'Saltworks', 'Fishing Dock', 'Warehouse'],
+  Mountain: ['Cabin', 'Mine', 'Warehouse'],
+  Forest: ['Cabin', 'Lumber Mill', 'Hunting Lodge', 'Logging Shack', 'Warehouse']
 };
 
 const buildingCategories = {
@@ -39,6 +40,16 @@ const buildingCategories = {
 };
 
 const buildingData = {
+  'Warehouse': {
+    name: 'Warehouse',
+    category: 'Other',
+    resourcesGenerated: {},
+    resourcesConsumed: {},
+    capacityIncrease: {
+      'Tree Logs': 5,
+      'Lumber': 5
+    },
+  },
   'Cabin': {
     name: 'Cabin',
     category: 'Other',
@@ -80,6 +91,9 @@ const buildingData = {
       'Tree Logs': 1
     },
     resourcesConsumed: {},
+    capacityIncrease: {
+      'Tree Logs': 5,
+    },
   },
   'Fishing Dock': {
     name: 'Fishing Dock',
@@ -101,17 +115,19 @@ const resourceTypes = {
   'Tree Logs': {
     name: 'Tree Logs',
     categoryEconomicSector: 'Primary',
-    categoryGrouping: ['Wood'],
+    categoryGrouping: ['Wood', 'Construction Material'],
     categoryTier: '1',
     amount: 0,
+    capacity: 0,
   },
 
   'Lumber': {
     name: 'Lumber',
     categoryEconomicSector: 'Secondary',
-    categoryGrouping: ['Wood'],
+    categoryGrouping: ['Wood', 'Construction Material'],
     categoryTier: '2',
     amount: 0,
+    capacity: 0,
   },
 
   'Wooden Chair': {
@@ -120,6 +136,7 @@ const resourceTypes = {
     categoryGrouping: ['Wood'],
     categoryTier: '3',
     amount: 0,
+    capacity: 0,
   },
 };
 
@@ -140,7 +157,7 @@ for (let row = 0; row < numRows; row++) {
       cellFeatures[individualCell.id] = {
         terrainType,
         [cellFeaturesBuildingsKey]: [],
-        [cellFeaturesStorageKey]: JSON.parse(JSON.stringify(resourceTypes))
+        [cellFeaturesCapacityKey]: JSON.parse(JSON.stringify(resourceTypes))
 
       };
 
@@ -242,6 +259,27 @@ function openCellMenu(cellId) {
   });
 }
 
+function handleStorageCapacityIncrease(cellId, buildingInfo) {
+  const cell = cellFeatures[cellId];
+  const capacityKey = cellFeaturesCapacityKey;
+
+  //Handle resource capacity increase
+  for (const resource in buildingInfo.capacityIncrease) {
+    const increaseAmount = buildingInfo.capacityIncrease[resource];
+
+    if (cell[capacityKey][resource]) {
+      const previousCapacity = cell[capacityKey][resource].capacity;
+      cell[capacityKey][resource].capacity += increaseAmount;
+      const newCapacity = cell[capacityKey][resource].capacity;
+
+      if (previousCapacity !== newCapacity) {
+        console.log(
+        `Cell: ${cellId}, Resource: ${resource}, Capacity Increased: ${increaseAmount}`);
+      }
+    }
+  }
+}
+
 function handleCellClick(event) {
   const clickedElement = event.target;
   
@@ -255,7 +293,7 @@ function handleCellClick(event) {
     console.log('Cell clicked:', cellId);
     console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
     console.log('Terrain:', cellFeatures[cellId].terrainType)
-    console.log('In storage:', cellFeatures[cellId][cellFeaturesStorageKey])
+    console.log('In storage:', cellFeatures[cellId][cellFeaturesCapacityKey])
     console.log('Current Cell:', selectedCellId)
     
   }  else if (clickedElement.classList.contains('building-btn')) {
@@ -268,6 +306,10 @@ function handleCellClick(event) {
       //Console log to confirm the building is added to the cell
       console.log(`Building ${buildingName} added to ${selectedCellId}`);
       console.log('Buildings:', cell[cellFeaturesBuildingsKey]);
+
+      //Handle capacity of resources increased from the newly added building
+      const buildingInfo = buildingData[buildingName];
+      handleStorageCapacityIncrease(selectedCellId, buildingInfo);
     }
   }
 }
@@ -281,22 +323,37 @@ function resourceChangePerTurn() {
     //Loop through buildings in all cells
     for (const building of buildings) {
       const buildingInfo = buildingData[building];
+      // console.log(`Building constructed ${building}`)
 
       //Handle resource generation
       for (const resource in buildingInfo.resourcesGenerated) {
         const amount = buildingInfo.resourcesGenerated[resource];
-        cell[cellFeaturesStorageKey][resource].amount += amount; 
+
+        if (cell[cellFeaturesCapacityKey][resource]) {
+          const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
+          const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
+
+          if (currentAmount < storageCapacity) {
+            const remainingCapacity = storageCapacity - currentAmount;
+            const generatedAmount = Math.min(amount, remainingCapacity);
+            cell[cellFeaturesCapacityKey][resource].amount += generatedAmount;
+          }
+        }
       }
 
       //Handle resource consumption
       for (const resource in buildingInfo.resourcesConsumed) {
         const amount = buildingInfo.resourcesConsumed[resource];
-        cell[cellFeaturesStorageKey][resource].amount -= amount;
+        
+        if (cell[cellFeaturesCapacityKey][resource]) {
+          if (cell[cellFeaturesCapacityKey][resource].amount >= amount) {
+            cell[cellFeaturesCapacityKey][resource].amount -= amount;
+          } 
+        }
       }
     }
   }
 }
-
 
 //Advance the turn and trigger end of turn changes
 function advanceTurn() {
