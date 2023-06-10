@@ -16,6 +16,8 @@ let currentTurn = 0;
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
+const cellFeaturesResourceGenerationKey = 'resourceGeneration'; 
+
 //Configs
 const numRows = 10;
 const numCols = 10;
@@ -157,8 +159,9 @@ for (let row = 0; row < numRows; row++) {
       cellFeatures[individualCell.id] = {
         terrainType,
         [cellFeaturesBuildingsKey]: [],
-        [cellFeaturesCapacityKey]: JSON.parse(JSON.stringify(resourceTypes))
-
+        [cellFeaturesCapacityKey]: JSON.parse(JSON.stringify(resourceTypes)),
+        [cellFeaturesResourceGenerationKey]: {}
+        
       };
 
       individualCell.setAttribute('data-terrain', terrainType);
@@ -248,7 +251,7 @@ function openCellMenu(cellId) {
   const buildingsTabContainerId = document.getElementById('buildings-tab-container');
   buildingsTabContainerId.style.display = 'none';
 
-//Event listener for tabs. (Can put as separate function maybe)
+//Event listener for tabs.
   const tabContainer = document.getElementById('tab-container');
   tabContainer.addEventListener('click', (event) => {
     const target = event.target;
@@ -261,20 +264,19 @@ function openCellMenu(cellId) {
 
 function handleStorageCapacityIncrease(cellId, buildingInfo) {
   const cell = cellFeatures[cellId];
-  const capacityKey = cellFeaturesCapacityKey;
 
   //Handle resource capacity increase
   for (const resource in buildingInfo.capacityIncrease) {
     const increaseAmount = buildingInfo.capacityIncrease[resource];
 
-    if (cell[capacityKey][resource]) {
-      const previousCapacity = cell[capacityKey][resource].capacity;
-      cell[capacityKey][resource].capacity += increaseAmount;
-      const newCapacity = cell[capacityKey][resource].capacity;
+    if (cell[cellFeaturesCapacityKey][resource]) {
+      const previousCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
+      cell[cellFeaturesCapacityKey][resource].capacity += increaseAmount;
+      const newCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
 
       if (previousCapacity !== newCapacity) {
         console.log(
-        `Cell: ${cellId}, Resource: ${resource}, Capacity Increased: ${increaseAmount}`);
+        `Cell: ${cellId}, Resource: ${resource}, Capacity Increased By: ${increaseAmount} (From ${previousCapacity} To ${newCapacity})`);
       }
     }
   }
@@ -304,8 +306,8 @@ function handleCellClick(event) {
       //Add building to cellFeatures
       cell[cellFeaturesBuildingsKey].push(buildingName);
       //Console log to confirm the building is added to the cell
-      console.log(`Building ${buildingName} added to ${selectedCellId}`);
-      console.log('Buildings:', cell[cellFeaturesBuildingsKey]);
+      console.log(`Building: ${buildingName} added to ${selectedCellId}`);
+      // console.log('Buildings:', cell[cellFeaturesBuildingsKey]);
 
       //Handle capacity of resources increased from the newly added building
       const buildingInfo = buildingData[buildingName];
@@ -319,6 +321,7 @@ function resourceChangePerTurn() {
   for (const cellId in cellFeatures) {
     const cell = cellFeatures[cellId];
     const buildings = cell[cellFeaturesBuildingsKey];
+    const totalResourceGeneration = {};
 
     //Loop through buildings in all cells
     for (const building of buildings) {
@@ -329,6 +332,14 @@ function resourceChangePerTurn() {
       for (const resource in buildingInfo.resourcesGenerated) {
         const amount = buildingInfo.resourcesGenerated[resource];
 
+        //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
+        if (totalResourceGeneration[resource]) {
+          totalResourceGeneration[resource] += amount;
+        } else {
+          totalResourceGeneration[resource] = amount;
+        }
+
+        //Checks for resource capacity
         if (cell[cellFeaturesCapacityKey][resource]) {
           const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
           const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
@@ -351,6 +362,10 @@ function resourceChangePerTurn() {
           } 
         }
       }
+
+      //Updates cellFeature resource generation, using totalResourceGeneration above as placeholder
+      cell[cellFeaturesResourceGenerationKey] = totalResourceGeneration;
+
     }
   }
 }
