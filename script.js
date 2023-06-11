@@ -10,13 +10,15 @@
 const gameWorld = document.getElementById('game-grid')
 const buildingMenu = document.getElementById('building-menu')
 const table = document.createElement('table');
-let selectedCellId = null;
 const cellFeatures = {};
+let selectedCellId = null;
 let currentTurn = 0;
+let playerClaimedCells = [];
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
 const cellFeaturesResourceGenerationKey = 'resourceGeneration'; 
+const cellFeaturesResourceConsumptionKey = 'resourceConsumption'; 
 
 //Configs
 const numRows = 10;
@@ -84,6 +86,9 @@ const buildingData = {
     },
     resourcesConsumed: {
       'Tree Logs': 1,
+    },
+    capacityIncrease: {
+      'Lumber': 5,
     },
   },
   'Logging Shack': {
@@ -160,7 +165,8 @@ for (let row = 0; row < numRows; row++) {
         terrainType,
         [cellFeaturesBuildingsKey]: [],
         [cellFeaturesCapacityKey]: JSON.parse(JSON.stringify(resourceTypes)),
-        [cellFeaturesResourceGenerationKey]: {}
+        [cellFeaturesResourceGenerationKey]: {},
+        [cellFeaturesResourceConsumptionKey]: {},
         
       };
 
@@ -176,6 +182,89 @@ function generateTerrain() {
   const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest'];
   const randomIndex = Math.floor(Math.random() * terrainTypes.length);
   return terrainTypes[randomIndex];
+}
+
+function handleStorageCapacityIncrease(cellId, buildingInfo) {
+  const cell = cellFeatures[cellId];
+
+  //Handle resource capacity increase
+  for (const resource in buildingInfo.capacityIncrease) {
+    const increaseAmount = buildingInfo.capacityIncrease[resource];
+
+    if (cell[cellFeaturesCapacityKey][resource]) {
+      const previousCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
+      cell[cellFeaturesCapacityKey][resource].capacity += increaseAmount;
+      const newCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
+
+      if (previousCapacity !== newCapacity) {
+        console.log(
+        `Cell: ${cellId}, Resource: ${resource}, Capacity Increased By: ${increaseAmount} (From ${previousCapacity} To ${newCapacity})`);
+      }
+    }
+  }
+}
+
+function resourceChangePerTurn() {
+  //Loop through all cells
+  for (const cellId in cellFeatures) {
+    const cell = cellFeatures[cellId];
+    const buildings = cell[cellFeaturesBuildingsKey];
+    const totalResourceGeneration = {};
+    const totalResourceConsumption = {};
+
+    //Loop through buildings in all cells
+    for (const building of buildings) {
+      const buildingInfo = buildingData[building];
+      //console.log(`Building constructed ${building}`)
+
+      //Handle resource generation
+      for (const resource in buildingInfo.resourcesGenerated) {
+        const amount = buildingInfo.resourcesGenerated[resource];
+
+        //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
+        if (totalResourceGeneration[resource]) {
+          totalResourceGeneration[resource] += amount;
+        } else {
+          totalResourceGeneration[resource] = amount;
+        }
+
+        //Checks for resource capacity
+        if (cell[cellFeaturesCapacityKey][resource]) {
+          const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
+          const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
+
+          if (currentAmount < storageCapacity) {
+            const remainingCapacity = storageCapacity - currentAmount;
+            const generatedAmount = Math.min(amount, remainingCapacity);
+            cell[cellFeaturesCapacityKey][resource].amount += generatedAmount;
+          }
+        }
+      }
+
+      //Handle resource consumption (need to have 'else statement' for if resource isn't available)
+      for (const resource in buildingInfo.resourcesConsumed) {
+        const amount = buildingInfo.resourcesConsumed[resource];
+
+         //Tracks resource consumption by putting it in a placeholder to be put in cellFeatures
+         if (totalResourceConsumption[resource]) {
+          totalResourceConsumption[resource] += amount;
+        } else {
+          totalResourceConsumption[resource] = amount;
+        }
+        
+        if (cell[cellFeaturesCapacityKey][resource]) {
+          if (cell[cellFeaturesCapacityKey][resource].amount >= amount) {
+            cell[cellFeaturesCapacityKey][resource].amount -= amount;
+          } 
+        }
+      }
+
+      //Updates cellFeature for resource generation & consumption, using placeholders.
+      cell[cellFeaturesResourceGenerationKey] = totalResourceGeneration;
+      cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumption;
+
+    }
+  }
 }
 
 //Generates the tabs for the building categories
@@ -262,26 +351,6 @@ function openCellMenu(cellId) {
   });
 }
 
-function handleStorageCapacityIncrease(cellId, buildingInfo) {
-  const cell = cellFeatures[cellId];
-
-  //Handle resource capacity increase
-  for (const resource in buildingInfo.capacityIncrease) {
-    const increaseAmount = buildingInfo.capacityIncrease[resource];
-
-    if (cell[cellFeaturesCapacityKey][resource]) {
-      const previousCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
-      cell[cellFeaturesCapacityKey][resource].capacity += increaseAmount;
-      const newCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
-
-      if (previousCapacity !== newCapacity) {
-        console.log(
-        `Cell: ${cellId}, Resource: ${resource}, Capacity Increased By: ${increaseAmount} (From ${previousCapacity} To ${newCapacity})`);
-      }
-    }
-  }
-}
-
 function handleCellClick(event) {
   const clickedElement = event.target;
   
@@ -305,7 +374,6 @@ function handleCellClick(event) {
       const cell = cellFeatures[selectedCellId];
       //Add building to cellFeatures
       cell[cellFeaturesBuildingsKey].push(buildingName);
-      //Console log to confirm the building is added to the cell
       console.log(`Building: ${buildingName} added to ${selectedCellId}`);
       // console.log('Buildings:', cell[cellFeaturesBuildingsKey]);
 
@@ -316,59 +384,6 @@ function handleCellClick(event) {
   }
 }
 
-function resourceChangePerTurn() {
-  //Loop through all cells
-  for (const cellId in cellFeatures) {
-    const cell = cellFeatures[cellId];
-    const buildings = cell[cellFeaturesBuildingsKey];
-    const totalResourceGeneration = {};
-
-    //Loop through buildings in all cells
-    for (const building of buildings) {
-      const buildingInfo = buildingData[building];
-      // console.log(`Building constructed ${building}`)
-
-      //Handle resource generation
-      for (const resource in buildingInfo.resourcesGenerated) {
-        const amount = buildingInfo.resourcesGenerated[resource];
-
-        //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
-        if (totalResourceGeneration[resource]) {
-          totalResourceGeneration[resource] += amount;
-        } else {
-          totalResourceGeneration[resource] = amount;
-        }
-
-        //Checks for resource capacity
-        if (cell[cellFeaturesCapacityKey][resource]) {
-          const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
-          const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
-
-          if (currentAmount < storageCapacity) {
-            const remainingCapacity = storageCapacity - currentAmount;
-            const generatedAmount = Math.min(amount, remainingCapacity);
-            cell[cellFeaturesCapacityKey][resource].amount += generatedAmount;
-          }
-        }
-      }
-
-      //Handle resource consumption
-      for (const resource in buildingInfo.resourcesConsumed) {
-        const amount = buildingInfo.resourcesConsumed[resource];
-        
-        if (cell[cellFeaturesCapacityKey][resource]) {
-          if (cell[cellFeaturesCapacityKey][resource].amount >= amount) {
-            cell[cellFeaturesCapacityKey][resource].amount -= amount;
-          } 
-        }
-      }
-
-      //Updates cellFeature resource generation, using totalResourceGeneration above as placeholder
-      cell[cellFeaturesResourceGenerationKey] = totalResourceGeneration;
-
-    }
-  }
-}
 
 //Advance the turn and trigger end of turn changes
 function advanceTurn() {
