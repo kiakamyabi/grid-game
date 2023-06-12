@@ -24,8 +24,8 @@ const cellFeaturesResourceConsumptionKey = 'resourceConsumption';
 
 
 //Configs
-const numRows = 10;
-const numCols = 10;
+const numRows = 15;
+const numCols = 15;
 
 const terrainBuildings = {
   Grass: ['Cabin', 'Farm', 'Hunting Lodge', 'Warehouse'],
@@ -270,17 +270,15 @@ function resourceChangePerTurn() {
   }
 }
 
-//Generates the tabs for the building categories
-function generateTabs() {
+function generateBuildingCategoryTabs() {
   let tabContent = '';
   for (const category in buildingCategories) {
     const categoryName = buildingCategories[category].name;
-    tabContent += `<button class="tab" data-category="${category}">${categoryName}</button>`;
+    tabContent += `<button class="building-category-tab" data-category="${category}">${categoryName}</button>`;
   }
   return tabContent;
 }
 
-//Used in generateMenuContent.
 function generateBuildingLists(terrainType) {
   let buildingListContent = '';
   for (const category in buildingCategories) {
@@ -288,7 +286,7 @@ function generateBuildingLists(terrainType) {
       .filter((building) => building.category === category && terrainBuildings[terrainType].includes(building.name));
 
     if (buildings.length > 0) {
-      buildingListContent += `<div class="building-list" data-category="${category}">`;
+      buildingListContent += `<div class="building-tab" data-category="${category}">`;
       for (const building of buildings) {
         buildingListContent += `<button class="building-btn" data-building="${building.name}">${building.name}</button>`;
       }
@@ -298,16 +296,13 @@ function generateBuildingLists(terrainType) {
   return buildingListContent;
 }
 
-//Creates claimed cell menu
-//terrainType = The terrain type associated with specific cell based on id, stored in cellFeatures.
-//function generateClaimedCellMenuContent
-function generateMenuContent(terrainType) {
+function generateClaimedCellMenuContent(terrainType) {
   const menuContent = 
-  `<div id="tab-container">
-    ${generateTabs()}
+  `<div id="building-category-tab-container">
+    ${generateBuildingCategoryTabs()}
     </div>
 
-  <div id="buildings-tab-container">
+  <div id="building-tab-container">
     ${generateBuildingLists(terrainType)}
   </div>`;
 
@@ -321,15 +316,15 @@ function generateUnclaimedCellMenuContent() {
   return menuContent;
 }
 
-function showBuildingList(category) {
+function showBuildingTabs(category) {
   //Show building buttons
-  const buildingsTabContainerId = document.getElementById('buildings-tab-container');
-  buildingsTabContainerId.style.display = 'block';
+  const buildingTabContainerId = document.getElementById('building-tab-container');
+  buildingTabContainerId.style.display = 'block';
 
-  const buildingLists = document.querySelectorAll('.building-list');
-  buildingLists.forEach((list) => {
-    const listCategory = list.getAttribute('data-category');
-    if (listCategory === category) {
+  const buildingTabs = document.querySelectorAll('.building-tab');
+  buildingTabs.forEach((list) => {
+    const buildingTabCategory = list.getAttribute('data-category');
+    if (buildingTabCategory === category) {
       list.style.display = 'block';
     } else {
       list.style.display = 'none';
@@ -338,27 +333,26 @@ function showBuildingList(category) {
 }
 
 //Open the menu for selected cell
-//function openclaimedCellMenu
-function openCellMenu(cellId) {
+function openClaimedCellMenu(cellId) {
   const selectedCell = cellFeatures[cellId];
   const terrainType = selectedCell.terrainType;
-  const menuContent = generateMenuContent(terrainType);
+  const menuContent = generateClaimedCellMenuContent(terrainType);
 //Update menu
   const menuContentContainer = document.getElementById('building-menu');
   menuContentContainer.innerHTML = menuContent;
 //Show menu
   menuContentContainer.style.display = 'block';
  //Hide building buttons to show later
-  const buildingsTabContainerId = document.getElementById('buildings-tab-container');
-  buildingsTabContainerId.style.display = 'none';
+  const buildingTabContainerId = document.getElementById('building-tab-container');
+  buildingTabContainerId.style.display = 'none';
 
 //Event listener for tabs.
-  const tabContainer = document.getElementById('tab-container');
+  const tabContainer = document.getElementById('building-category-tab-container');
   tabContainer.addEventListener('click', (event) => {
     const target = event.target;
-    if (target.classList.contains('tab')) {
+    if (target.classList.contains('building-category-tab')) {
       const category = target.getAttribute('data-category');
-      showBuildingList(category);
+      showBuildingTabs(category);
     }
   });
 }
@@ -401,7 +395,7 @@ function handleCellClick(event) {
     buildingMenu.style.display = 'none';
 
     if (playerClaimedCells.includes(cellId)) {
-      openCellMenu(cellId);
+      openClaimedCellMenu(cellId);
       //Console logs for testing
       console.log('Cell clicked:', cellId);
       console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
