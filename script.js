@@ -9,16 +9,19 @@
 //Data
 const gameWorld = document.getElementById('game-grid')
 const buildingMenu = document.getElementById('building-menu')
+const unclaimedCellMenu = document.getElementById('unclaimed-cell-menu')
 const table = document.createElement('table');
 const cellFeatures = {};
 let selectedCellId = null;
 let currentTurn = 0;
 let playerClaimedCells = [];
+let firstClaimedCell = null; 
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
 const cellFeaturesResourceGenerationKey = 'resourceGeneration'; 
-const cellFeaturesResourceConsumptionKey = 'resourceConsumption'; 
+const cellFeaturesResourceConsumptionKey = 'resourceConsumption';
+
 
 //Configs
 const numRows = 10;
@@ -295,8 +298,9 @@ function generateBuildingLists(terrainType) {
   return buildingListContent;
 }
 
-//Makes the actual 'menu'
+//Creates claimed cell menu
 //terrainType = The terrain type associated with specific cell based on id, stored in cellFeatures.
+//function generateClaimedCellMenuContent
 function generateMenuContent(terrainType) {
   const menuContent = 
   `<div id="tab-container">
@@ -306,6 +310,13 @@ function generateMenuContent(terrainType) {
   <div id="buildings-tab-container">
     ${generateBuildingLists(terrainType)}
   </div>`;
+
+  return menuContent;
+}
+
+function generateUnclaimedCellMenuContent() {
+  const menuContent = 
+  `<button class="claim-cell-btn">Claim</button>`;
 
   return menuContent;
 }
@@ -327,6 +338,7 @@ function showBuildingList(category) {
 }
 
 //Open the menu for selected cell
+//function openclaimedCellMenu
 function openCellMenu(cellId) {
   const selectedCell = cellFeatures[cellId];
   const terrainType = selectedCell.terrainType;
@@ -351,39 +363,84 @@ function openCellMenu(cellId) {
   });
 }
 
+function openUnclaimedCellMenu(){
+  const menuContent = generateUnclaimedCellMenuContent();
+  //Update menu
+  const menuContentContainer = document.getElementById('unclaimed-cell-menu');
+  menuContentContainer.innerHTML = menuContent;
+  //Show menu
+  menuContentContainer.style.display = 'block';
+}
+
+function claimCell(cellId, clickedElement) {
+  playerClaimedCells.push(cellId);
+
+  //Update the cell's class
+  const cellElement = document.getElementById(cellId);
+  cellElement.classList.add('claimed');
+
+  //Disable the claim button for the claimed cell
+  const claimButton = clickedElement;
+  claimButton.disabled = true;
+
+  //Hide the claim button for the claimed cell
+  claimButton.style.display = 'none';
+
+  console.log(`Cell: ${cellId} claimed.`);
+  console.log(playerClaimedCells)
+}
+
 function handleCellClick(event) {
   const clickedElement = event.target;
   
   if (clickedElement.classList.contains('grid-cell')) {
     const cellId = clickedElement.id;
     selectedCellId = cellId;
+    const menuContentContainer = document.getElementById('building-menu');
+    menuContentContainer.style.display = 'none';
 
-    openCellMenu(selectedCellId);
+    if (playerClaimedCells.includes(cellId)) {
+      openCellMenu(cellId);
+      //Console logs for testing
+      console.log('Cell clicked:', cellId);
+      console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
+      console.log('Terrain:', cellFeatures[cellId].terrainType)
+      console.log('In storage:', cellFeatures[cellId][cellFeaturesCapacityKey])
+      console.log('Current Cell:', selectedCellId)
+    }
+    // else if (firstClaimedCell === null) {
+    //   firstClaimedCell = cellId;
+    //   openUnclaimedCellMenu()
 
-    //Console logs for testing
-    console.log('Cell clicked:', cellId);
-    console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
-    console.log('Terrain:', cellFeatures[cellId].terrainType)
-    console.log('In storage:', cellFeatures[cellId][cellFeaturesCapacityKey])
-    console.log('Current Cell:', selectedCellId)
+    // }
+    else if (!playerClaimedCells.includes(cellId)) {
+      openUnclaimedCellMenu()
+      
+    }
+    else{
+      console.log("Error")
+    }
+
     
-  }  else if (clickedElement.classList.contains('building-btn')) {
+  } else if (clickedElement.classList.contains('building-btn')) {
     const buildingName = clickedElement.getAttribute('data-building');
 
-    if (selectedCellId) {
-      const cell = cellFeatures[selectedCellId];
-      //Add building to cellFeatures
-      cell[cellFeaturesBuildingsKey].push(buildingName);
-      console.log(`Building: ${buildingName} added to ${selectedCellId}`);
-      // console.log('Buildings:', cell[cellFeaturesBuildingsKey]);
+      if (selectedCellId) {
+        const cell = cellFeatures[selectedCellId];
+        //Add building to cellFeatures
+        cell[cellFeaturesBuildingsKey].push(buildingName);
+        console.log(`Building: ${buildingName} added to ${selectedCellId}`);
 
-      //Handle capacity of resources increased from the newly added building
-      const buildingInfo = buildingData[buildingName];
-      handleStorageCapacityIncrease(selectedCellId, buildingInfo);
+        //Handle capacity of resources increased from the newly added building
+        const buildingInfo = buildingData[buildingName];
+        handleStorageCapacityIncrease(selectedCellId, buildingInfo);
+      }
+
+  } else if (clickedElement.classList.contains('claim-cell-btn')) {
+      //Handle claim button click on the claim menu
+      claimCell(selectedCellId, clickedElement);
     }
-  }
 }
-
 
 //Advance the turn and trigger end of turn changes
 function advanceTurn() {
@@ -398,10 +455,4 @@ worldGeneration()
 
 gameWorld.addEventListener('click', handleCellClick);
 buildingMenu.addEventListener('click', handleCellClick);
-
-
-
-
-
-
-
+unclaimedCellMenu.addEventListener('click', handleCellClick);
