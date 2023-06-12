@@ -384,7 +384,7 @@ function claimCell(cellId, clickedElement) {
   claimButton.disabled = true;
 
   //Hide the claim button for the claimed cell
-  claimButton.style.display = 'none';
+  // claimButton.style.display = 'none';
 
   console.log(`Cell: ${cellId} claimed.`);
   console.log(playerClaimedCells)
@@ -396,8 +396,9 @@ function handleCellClick(event) {
   if (clickedElement.classList.contains('grid-cell')) {
     const cellId = clickedElement.id;
     selectedCellId = cellId;
-    const menuContentContainer = document.getElementById('building-menu');
-    menuContentContainer.style.display = 'none';
+    //Hides menus to stop overlap
+    unclaimedCellMenu.style.display = 'none'
+    buildingMenu.style.display = 'none';
 
     if (playerClaimedCells.includes(cellId)) {
       openCellMenu(cellId);
