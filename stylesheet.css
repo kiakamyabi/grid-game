@@ -40,13 +40,12 @@ table {
 .building-category-tab{
   padding: 10px;
   margin: 5px;
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 .building-btn{
   padding: 10px;
   margin: 5px;
   font-size: 0.8rem;
-  border: none;
 }
 #advance-turn, .claim-cell-btn{
   margin: 10px;
