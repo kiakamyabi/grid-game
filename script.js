@@ -322,12 +322,12 @@ function showBuildingTabs(category) {
   buildingTabContainerId.style.display = 'block';
 
   const buildingTabs = document.querySelectorAll('.building-tab');
-  buildingTabs.forEach((list) => {
-    const buildingTabCategory = list.getAttribute('data-category');
+  buildingTabs.forEach((tab) => {
+    const buildingTabCategory = tab.getAttribute('data-category');
     if (buildingTabCategory === category) {
-      list.style.display = 'block';
+      tab.style.display = 'flex';
     } else {
-      list.style.display = 'none';
+      tab.style.display = 'none';
     }
   });
 }
@@ -363,7 +363,7 @@ function openUnclaimedCellMenu(){
   const menuContentContainer = document.getElementById('unclaimed-cell-menu');
   menuContentContainer.innerHTML = menuContent;
   //Show menu
-  menuContentContainer.style.display = 'block';
+  menuContentContainer.style.display = 'flex';
 }
 
 function claimCell(cellId, clickedElement) {
