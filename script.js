@@ -1,10 +1,8 @@
-//Solve problem of player building anywhere. 
 //Add construction build times
-//Get buildings into different tabs with better UI
 //Change generation to be procedural instead of random (perlin noise with seeds?)
-//Position menu properly so its always visible
 //Decide on buildings limit
 //Put configs and stuff in another file at some point
+//Make special menu for when the player is claiming the first cell, like settling turn 1 for Civ
 
 //Data
 const gameWorld = document.getElementById('game-grid')
@@ -21,8 +19,6 @@ const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
 const cellFeaturesResourceGenerationKey = 'resourceGeneration'; 
 const cellFeaturesResourceConsumptionKey = 'resourceConsumption';
-
-
 //Configs
 const numRows = 15;
 const numCols = 15;
@@ -180,9 +176,9 @@ for (let row = 0; row < numRows; row++) {
   gameWorld.appendChild(table);
 }
 
-//Generates terrain randomly
 function generateTerrain() {
   const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest'];
+  //Generates terrain randomly
   const randomIndex = Math.floor(Math.random() * terrainTypes.length);
   return terrainTypes[randomIndex];
 }
@@ -310,10 +306,21 @@ function generateClaimedCellMenuContent(terrainType) {
 }
 
 function generateUnclaimedCellMenuContent() {
-  const menuContent = 
-  `<button class="claim-cell-btn">Claim</button>`;
+  if (firstClaimedCell === null){
+    const menuContent = 
+    `<button class="claim-cell-btn">Claim</button>`;
+    return menuContent;
+    
+  }
+  else {
+    const isAdjacentCellClaimed = checkForAdjacentClaimedCell(selectedCellId);
+    const disabledAttribute = isAdjacentCellClaimed ? '' : 'disabled';
+    const menuContent = `
+      <button class="claim-cell-btn" ${disabledAttribute}>Claim</button>`;
+    return menuContent;
+  }
 
-  return menuContent;
+  
 }
 
 function showBuildingTabs(category) {
@@ -332,7 +339,6 @@ function showBuildingTabs(category) {
   });
 }
 
-//Open the menu for selected cell
 function openClaimedCellMenu(cellId) {
   const selectedCell = cellFeatures[cellId];
   const terrainType = selectedCell.terrainType;
@@ -366,7 +372,7 @@ function openUnclaimedCellMenu(){
   menuContentContainer.style.display = 'flex';
 }
 
-//Get adjacent cells for a given cell
+//Tracks adjacent cells into an array
 function getAdjacentCells(cellId) {
   const cellIdParts = cellId.split('-');
   const row = parseInt(cellIdParts[1]);
@@ -381,11 +387,23 @@ function getAdjacentCells(cellId) {
       }
     }
   }
-  console.log(adjacentCells);
   return adjacentCells;
 }
 
+function checkForAdjacentClaimedCell(cellId) {
+  const adjacentCells = getAdjacentCells(cellId);
+  for (const adjacentCellId of adjacentCells) {
+    if (playerClaimedCells.includes(adjacentCellId)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function claimCell(cellId, clickedElement) {
+  if (firstClaimedCell === null) {
+    firstClaimedCell = selectedCellId;
+  }
   playerClaimedCells.push(cellId);
 
   //Update the cell's class
@@ -395,9 +413,6 @@ function claimCell(cellId, clickedElement) {
   //Disable the claim button for the claimed cell
   const claimButton = clickedElement;
   claimButton.disabled = true;
-
-  //Hide the claim button for the claimed cell
-  // claimButton.style.display = 'none';
 
   console.log(`Cell: ${cellId} claimed.`);
   console.log(playerClaimedCells)
@@ -410,29 +425,27 @@ function handleCellClick(event) {
     const cellId = clickedElement.id;
     selectedCellId = cellId;
     //Hides menus to stop overlap
-    unclaimedCellMenu.style.display = 'none'
+    unclaimedCellMenu.style.display = 'none';
     buildingMenu.style.display = 'none';
 
-    if (playerClaimedCells.includes(cellId)) {
+    if (playerClaimedCells.includes(cellId) ) {
       openClaimedCellMenu(cellId);
       //Console logs for testing
       console.log('Cell clicked:', cellId);
-      console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey])
-      console.log('Terrain:', cellFeatures[cellId].terrainType)
-      console.log('In storage:', cellFeatures[cellId][cellFeaturesCapacityKey])
-      console.log('Current Cell:', selectedCellId)
+      console.log('Buildings:', cellFeatures[cellId][cellFeaturesBuildingsKey]);
+      console.log('Terrain:', cellFeatures[cellId].terrainType);
+      console.log('In storage:', cellFeatures[cellId][cellFeaturesCapacityKey]);
+      console.log('Current Cell:', selectedCellId);
     }
-    // else if (firstClaimedCell === null) {
-    //   firstClaimedCell = cellId;
-    //   openUnclaimedCellMenu()
-
-    // }
+    else if (firstClaimedCell === null) {
+      //Placeholder for when special menu for first cell to be claimed
+      openUnclaimedCellMenu();
+    }
     else if (!playerClaimedCells.includes(cellId)) {
-      openUnclaimedCellMenu()
-      
+      openUnclaimedCellMenu();
     }
     else{
-      console.log("Error")
+      throw new Error('You have selected a cell that isn\'t meant to exist.');
     }
 
     
@@ -451,9 +464,10 @@ function handleCellClick(event) {
       }
 
   } else if (clickedElement.classList.contains('claim-cell-btn')) {
-      //Handle claim button click on the claim menu
+      //Handle claim button 
       claimCell(selectedCellId, clickedElement);
     }
+
 }
 
 //Advance the turn and trigger end of turn changes
