@@ -1,7 +1,7 @@
 #game-grid {
   display: flex;
-  justify-content: center; /* Horizontally center the grid */
-  align-items: center; /* Vertically center the grid */
+  justify-content: center;
+  align-items: center;
 }
 table { 
   border-spacing: 2px;
@@ -11,7 +11,6 @@ table {
 .grid-cell {
     width: 100px; 
     height: 100px; 
-    /* border: 2px solid white;  */
     box-sizing: border-box;
 }
 [data-terrain="Grass"] {
@@ -43,14 +42,21 @@ table {
   align-items: center;
 }
 .building-category-tab{
-  padding: 10px;
+  padding: 7px 10px;
   margin: 5px;
   font-size: 1.3rem;
 }
 .building-btn{
+  transition-duration: 0.4s;
   padding: 10px;
   margin: 5px;
   font-size: 0.8rem;
+  border-radius: 15px;
+  border: none;
+}
+.building-btn:hover {
+  background-color: rgb(93, 91, 91);
+  color: white;
 }
 #advance-turn, .claim-cell-btn{
   margin: 10px;

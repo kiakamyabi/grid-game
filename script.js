@@ -366,6 +366,25 @@ function openUnclaimedCellMenu(){
   menuContentContainer.style.display = 'flex';
 }
 
+//Get adjacent cells for a given cell
+function getAdjacentCells(cellId) {
+  const cellIdParts = cellId.split('-');
+  const row = parseInt(cellIdParts[1]);
+  const col = parseInt(cellIdParts[2]);
+  const adjacentCells = [];
+
+  for (let i = row - 1; i <= row + 1; i++) {
+    for (let j = col - 1; j <= col + 1; j++) {
+      const adjacentCellId = `cell-${i}-${j}`;
+      if (i >= 0 && i < numRows && j >= 0 && j < numCols && adjacentCellId !== cellId) {
+        adjacentCells.push(adjacentCellId);
+      }
+    }
+  }
+  console.log(adjacentCells);
+  return adjacentCells;
+}
+
 function claimCell(cellId, clickedElement) {
   playerClaimedCells.push(cellId);
 
