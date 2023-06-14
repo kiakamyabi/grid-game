@@ -1,3 +1,4 @@
+# Kia's Grid Game </br>
 This is a browser based custom game I am making using vanilla JS. <br/>
 Currently the UI is bare bones and the game information is shown in the console.<br/>
 
