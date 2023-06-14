@@ -103,27 +103,28 @@ So if you wanted to change the colour of the Grass terrain to red<br>
 
 >[data-terrain="Grass"] {background-color: red; } <br>
 
-This will change all cells with the Grass terrain to have a red colour. If you want to add a new terrain you have made and give it a yellow colour, e.g Marshmellow Hills <br/>
-Example: <br/>
-    [data-terrain="Marshmellow Hills"] {
-    background-color: yellow; 
-    } <br/>
+This will change all cells with the Grass terrain to have a red colour. <br>
+If you want to add a new terrain you have made and give it a yellow colour, e.g Marshmellow Hills. <br>
 
-ADD A NEW RESOURCE OR CHANGE AN OLD ONE <br/>
-Go to the object const resourceTypes. This is where all the Resource Type data is.  <br/>
-If you wanted to rename Tree Logs to Wooden Logs... <br/>
-Example: <br/>
-    const resourceTypes {
-        'Tree Logs': {
-        name: 'Tree Logs',
-        categoryEconomicSector: 'Primary',
-        categoryGrouping: ['Wood', 'Construction Material'],
-        categoryTier: '1',
-        amount: 0,
-        capacity: 0,
-        },
-    } <br/>
-Rename Tree Logs in the name and the tag for the object like this <br/>
+>[data-terrain="Marshmellow Hills"] {background-color: yellow; } <br>
+
+### Add a new resource or change an old one <br/>
+Go to the object const resourceTypes.<br>
+This is where all the Resource Type data is.  <br>
+If you wanted to rename Tree Logs to Wooden Logs <br>
+
+>const resourceTypes {<br>
+        'Tree Logs': { <br>
+        name: 'Tree Logs', <br>
+        categoryEconomicSector: 'Primary', <br>
+        categoryGrouping: ['Wood', 'Construction Material'], <br>
+        categoryTier: '1', <br>
+        amount: 0, <br>
+        capacity: 0, <br>
+        }, <br>
+    } <br>
+
+Rename Tree Logs in the name and the tag for the object like this <br>
     const resourceTypes {
         'Wood Logs': {
         name: 'Wood Logs',
