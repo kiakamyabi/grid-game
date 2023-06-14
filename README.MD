@@ -6,7 +6,7 @@ Currently the UI is bare bones and the game information is shown in the console.
 The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps.
 
 ## Step 1 - World Generation and Economy <br/>
-    -Use perlin noise to generate a consistent and high quality world. <br/>
+    -Use perlin noise to generate a consistent and high quality world.
     -The capacity to use seeds so the player can customize the world before game start. <br/>
     -The world must have different terrain types and features on each 'cell' to differentiate between them. <br/>
     -Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population. <br/>
@@ -17,7 +17,7 @@ The current objective is to make a playable game with mildly indepth mechanics r
 ## Step 3 - Ai <br/>
 
 # Current features: <br/>
-## World Generation> <br/>
+## World Generation <br/>
     -Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger <br/>
     -Currently based on random gen, will use perlin noise when complete <br/>
     -Terrain types e.g Grassland, Forest etc <br/>
