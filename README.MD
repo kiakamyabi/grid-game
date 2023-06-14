@@ -157,7 +157,8 @@ If you wanted to add a new building <br>
 Give the building a name and match it to the name of the object. <br>
 Pick the right category. <br>
 Add what it will generate based on a resource type in resourceTypes. <br>
-Add any resource that is confused. Add any resource that has its capacity increased. <br>
+Add any resource that is consumed as well. <br>
+Add any resource that has its capacity increased. <br>
 
 >const buildingData = { <br>
 >'Marshmellow Kitchen': { <br>
