@@ -114,15 +114,15 @@ This is where all the Resource Type data is.  <br>
 If you wanted to rename Tree Logs to Wooden Logs <br>
 
 >const resourceTypes {<br>
-        'Tree Logs': { <br>
-        name: 'Tree Logs', <br>
-        categoryEconomicSector: 'Primary', <br>
-        categoryGrouping: ['Wood', 'Construction Material'], <br>
-        categoryTier: '1', <br>
-        amount: 0, <br>
-        capacity: 0, <br>
-        }, <br>
-    } <br>
+>>'Tree Logs': { <br>
+>>name: 'Tree Logs', <br>
+categoryEconomicSector: 'Primary', <br>
+categoryGrouping: ['Wood', 'Construction Material'], <br>
+categoryTier: '1', <br>
+amount: 0, <br>
+capacity: 0, <br>
+}, <br>
+} <br>
 
 Rename Tree Logs in the name and the tag for the object like this <br>
     const resourceTypes {
