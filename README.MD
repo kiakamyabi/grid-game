@@ -40,8 +40,8 @@ Example: Lumber Mill, Generates 1 Lumber, Consumes 1 Tree Log, Increases storage
 6. Advancing the turn will then trigger the end of turn effects such as resource generation/consumption.
 Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log, +5 Tree Log Storage) and a Lumber Mill(+1 Lumber, -1 Tree Log, +5 Lumber Storage), on turn end the storage of Lumber will increase by 1 and will continue to do so every turn until the limit is hit. This is tracked in cellFeatures which you can see in the console.
 
-Configs: <br/>
-TO CHANGE HOW BIG THE WORLD GRID IS <br/>
+## Configs:
+### How to change the world grid size
     const numRow = number of rows <br/>
     const numCols = number of columns <br/>
 Example to make a 20 by 20 grid for the world map: <br/>
