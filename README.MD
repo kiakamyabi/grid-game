@@ -30,15 +30,15 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - Distinction between 'claimed' and 'unclaimed' cells
 - Turns
 
-What can you actually do with the current version? <br/>
-    -Currently the world is just generated on start up.  <br/>
-    -Then you can claim any cell which represents you settling somewhere on game start. <br/>
-    -Which terrain type you pick will determine what kind of building you can construct. <br/>
-    -Once you claim a cell you can only claim adjacent cells which means you cannot claim two cells on the other side of the map. So you can only grow from your starting point, representing an actual colony growing. <br/>
-    -Once a cell is claimed you can build on it. Buildings can generate, consume or provide storage for any resource. This represents making a production chain. <br/>
-    Example: Lumber Mill, Generates 1 Lumber, Consumes 1 Tree Log, Increases storage capacity by 5 for Lumber. However it can only be built in the Forest terrain. <br/>
-    -Advancing the turn will then trigger the end of turn effects such as resource generation/consumption.  <br/>
-    Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log, +5 Tree Log Storage) and a Lumber Mill(+1 Lumber, -1 Tree Log, +5 Lumber Storage), on turn end the storage of Lumber will increase by 1 and will continue to do so every turn until the limit is hit. This is tracked in cellFeatures which you can see in the console. <br/>
+# What can you actually do with the current version?
+1. Currently the world is generated on start up.
+2. You can claim any cell which represents you settling somewhere on game start.
+3. Which terrain type you pick will determine what kind of building you can construct.
+4. Once you claim a cell you can only claim adjacent cells which means you cannot claim two cells on the other side of the map. You can only grow from your starting point, representing an actual colony growing.
+5. Once a cell is claimed you can build on it. Buildings can generate, consume or provide storage for any resource. This represents making a production chain.
+Example: Lumber Mill, Generates 1 Lumber, Consumes 1 Tree Log, Increases storage capacity by 5 for Lumber. However it can only be built in the Forest terrain.
+6. Advancing the turn will then trigger the end of turn effects such as resource generation/consumption.
+Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log, +5 Tree Log Storage) and a Lumber Mill(+1 Lumber, -1 Tree Log, +5 Lumber Storage), on turn end the storage of Lumber will increase by 1 and will continue to do so every turn until the limit is hit. This is tracked in cellFeatures which you can see in the console.
 
 Configs: <br/>
 TO CHANGE HOW BIG THE WORLD GRID IS <br/>
