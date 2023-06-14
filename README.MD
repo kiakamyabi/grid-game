@@ -1,7 +1,7 @@
 This is a browser based custom game I am making using vanilla JS. <br/>
 Currently the UI is bare bones and the game information is shown in the console.<br/>
 
-#Objective:
+# Objective:
 The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps.
 
 Step 1 - World Generation and Economy <br/>
