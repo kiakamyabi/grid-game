@@ -86,8 +86,7 @@ Inside that object is each terrain shown by an array, in that array are the buil
 This will result in Example Building being the only building that can be constructed in Grass type terrain. <br>
 If you wanted to adjust the type of buildings that can be constructed in a terrain type you created<br>
 
->const terrainBuildings = {Grass:<br>
-['Example Building'],<br>
+>const terrainBuildings = {Grass:<['Example Building'],<br>
 Marshmellow Hills: ['Example Building']} <br>
 
 This will allow Example Building to be built in both Grass and Marshmellow Hills type terrain. <br/>
