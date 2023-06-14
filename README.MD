@@ -18,17 +18,17 @@ The current objective is to make a playable game with mildly indepth mechanics r
 
 # Current features: 
 ## World Generation 
-    -Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger 
-    -Currently based on random gen, will use perlin noise when complete 
-    -Terrain types e.g Grassland, Forest etc 
+- Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger 
+- Currently based on random gen, will use perlin noise when complete 
+- Terrain types e.g Grassland, Forest etc 
 
 ## Content 
-    -Buildings  
-    -Resource Generation 
-    -Resource Consumption 
-    -Storage capacity 
-    -Distinction between 'claimed' and 'unclaimed' cells
-    -Turns
+- Buildings  
+- Resource Generation 
+- Resource Consumption 
+- Storage capacity 
+- Distinction between 'claimed' and 'unclaimed' cells
+- Turns
 
 What can you actually do with the current version? <br/>
     -Currently the world is just generated on start up.  <br/>
