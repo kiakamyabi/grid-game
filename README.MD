@@ -1,13 +1,13 @@
-# Kia's Grid Game </br>
+# Kia's Grid Game 
 This is a browser based custom game I am making using vanilla JS.
 Currently the UI is bare bones and the game information is shown in the console.
 
 # Objective:
 The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps.
 
-## Step 1 - World Generation and Economy <br/>
+## Step 1 - World Generation and Economy 
     -Use perlin noise to generate a consistent and high quality world.
-    -The capacity to use seeds so the player can customize the world before game start. 
+    -Use seeds so the player can customize the world before game start. 
     -The world must have different terrain types and features on each 'cell' to differentiate between them. 
     -Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population. 
     -Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc. 
@@ -16,19 +16,19 @@ The current objective is to make a playable game with mildly indepth mechanics r
 ## Step 2 - Military 
 ## Step 3 - Ai
 
-# Current features: <br/>
-## World Generation <br/>
-    -Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger <br/>
-    -Currently based on random gen, will use perlin noise when complete <br/>
-    -Terrain types e.g Grassland, Forest etc <br/>
+# Current features: 
+## World Generation 
+    -Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger 
+    -Currently based on random gen, will use perlin noise when complete 
+    -Terrain types e.g Grassland, Forest etc 
 
-## Content <br/>
-    -Buildings <br/> 
-    -Resource Generation <br/>
-    -Resource Consumption <br/>
-    -Storage capacity <br/>
-    -Distinction between 'claimed' and 'unclaimed' cells <br/>
-    -Turns <br/>
+## Content 
+    -Buildings  
+    -Resource Generation 
+    -Resource Consumption 
+    -Storage capacity 
+    -Distinction between 'claimed' and 'unclaimed' cells
+    -Turns
 
 What can you actually do with the current version? <br/>
     -Currently the world is just generated on start up.  <br/>
