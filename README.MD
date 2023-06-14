@@ -77,12 +77,14 @@ Example to add new terrain type Marshmellow Hills: <br>
 
 Now in world gen it will add that terrain type to the map. However it will not colour the cell or let you build any buildings on that type of terrain. <br>
 
-### CHANGE WHAT BUILDINGS CAN BE BUILT ON WHAT TERRAIN <br>
-    Go to the const terrainBuildings object. Inside that object is each terrain shown by an array, in that array are the buildings that can be built in that type of terrain. <br/>
-Example: <br/>
-    const terrainBuildings = {
+### Change buildings can be built on terrain types <br>
+Go to the const terrainBuildings object. <br>
+Inside that object is each terrain shown by an array, in that array are the buildings that can be built in that type of terrain. <br>
+
+>const terrainBuildings = {
     Grass: ['Example Building']
-    } <br/>
+    } 
+    
 This will result in Example Building being the only building that can be constructed in Grass type terrain. <br/>
 If you wanted to adjust the type of buildings that can be constructed in a terrain type you created... <br/>
 Example: <br/>
