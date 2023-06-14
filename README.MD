@@ -13,8 +13,8 @@ The current objective is to make a playable game with mildly indepth mechanics r
     -Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc. 
     -Expeditions. Player will need to explore cells which can have special features before they can colonize it. 
 
-## Step 2 - Military 
-## Step 3 - Ai
+### Step 2 - Military 
+### Step 3 - Ai
 
 # Current features: 
 ## World Generation 
