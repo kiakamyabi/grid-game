@@ -134,7 +134,7 @@ Rename Tree Logs in the name and the tag for the object like this <br>
 >categoryTier: '1', <br>
 >amount: 0, <br>
 >capacity: 0, <br>
->},
+>}, <br>
 >} <br>
 
 Now you have basically made a new resource and will need to update over the old one where it was used in buildingData.<br/>
