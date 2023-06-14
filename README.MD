@@ -1,47 +1,47 @@
 # Kia's Grid Game 
-This is a browser based custom game I am making using vanilla JS.
-Currently the UI is bare bones and the game information is shown in the console.
+This is a browser based custom game I am making using vanilla JS. <br>
+Currently the UI is bare bones and the game information is shown in the console. <br>
 
 # Objective:
-The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps.
+The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps. <br>
 
 ## Step 1 - World Generation and Economy 
-- Use perlin noise to generate a consistent and high quality world.
+- Use perlin noise to generate a consistent and high quality world. <br>
 - Use seeds so the player can customize the world before game start. 
-- The world must have different terrain types and features on each 'cell' to differentiate between them. 
-- Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population. 
-- Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc. 
-- Expeditions. Player will need to explore cells which can have special features before they can colonize it. 
+- The world must have different terrain types and features on each 'cell' to differentiate between them. <br>
+- Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population.<br>
+- Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc.  <br>
+- Expeditions. Player will need to explore cells which can have special features before they can colonize it. <br>
 
-### Step 2 - Military 
-### Step 3 - Ai
+### Step 2 - Military <br>
+### Step 3 - Ai <br>
 
-# Current features: 
-## World Generation 
-- Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger 
-- Currently based on random gen, will use perlin noise when complete 
-- Terrain types e.g Grassland, Forest etc 
+# Current features <br>
+## World Generation <br>
+- Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger <br>
+- Currently based on random gen, will use perlin noise when complete <br>
+- Terrain types e.g Grassland, Forest etc <br>
 
-## Content 
-- Buildings  
-- Resource Generation 
-- Resource Consumption 
-- Storage capacity 
-- Distinction between 'claimed' and 'unclaimed' cells
-- Turns
+## Content <br>
+- Buildings  <br>
+- Resource Generation <br>
+- Resource Consumption <br>
+- Storage capacity <br>
+- Distinction between 'claimed' and 'unclaimed' cells <br>
+- Turns <br>
 
-# What can you actually do with the current version?
-1. Currently the world is generated on start up.
-2. You can claim any cell which represents you settling somewhere on game start.
-3. Which terrain type you pick will determine what kind of building you can construct.
-4. Once you claim a cell you can only claim adjacent cells which means you cannot claim two cells on the other side of the map. You can only grow from your starting point, representing an actual colony growing.
-5. Once a cell is claimed you can build on it. Buildings can generate, consume or provide storage for any resource. This represents making a production chain.
-Example: Lumber Mill, Generates 1 Lumber, Consumes 1 Tree Log, Increases storage capacity by 5 for Lumber. However it can only be built in the Forest terrain.
-6. Advancing the turn will then trigger the end of turn effects such as resource generation/consumption.
-Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log, +5 Tree Log Storage) and a Lumber Mill(+1 Lumber, -1 Tree Log, +5 Lumber Storage), on turn end the storage of Lumber will increase by 1 and will continue to do so every turn until the limit is hit. This is tracked in cellFeatures which you can see in the console.
+# What can you actually do with the current version? <br>
+1. Currently the world is generated on start up. <br>
+2. You can claim any cell which represents you settling somewhere on game start. <br>
+3. Which terrain type you pick will determine what kind of building you can construct. <br>
+4. Once you claim a cell you can only claim adjacent cells which means you cannot claim two cells on the other side of the map. You can only grow from your starting point, representing an actual colony growing. <br>
+5. Once a cell is claimed you can build on it. Buildings can generate, consume or provide storage for any resource. This represents making a production chain. <br>
+Example: Lumber Mill, Generates 1 Lumber, Consumes 1 Tree Log, Increases storage capacity by 5 for Lumber. However it can only be built in the Forest terrain. <br>
+6. Advancing the turn will then trigger the end of turn effects such as resource generation/consumption. <br>
+Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log, +5 Tree Log Storage) and a Lumber Mill(+1 Lumber, -1 Tree Log, +5 Lumber Storage), on turn end the storage of Lumber will increase by 1 and will continue to do so every turn until the limit is hit. This is tracked in cellFeatures which you can see in the console. <br>
 
-## Configs
-### How to change the world grid size
+## Configs <br>
+### How to change the world grid size <br>
 Locate const numRow and const numCols in the script.<br>
 Change the number of rows/columns are you see fit.<br>
 
