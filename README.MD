@@ -16,13 +16,13 @@ The current objective is to make a playable game with mildly indepth mechanics r
 ## Step 2 - Military <br/>
 ## Step 3 - Ai <br/>
 
-Current features: <br/>
-World Generation> <br/>
+# Current features: <br/>
+## World Generation> <br/>
     -Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger <br/>
     -Currently based on random gen, will use perlin noise when complete <br/>
     -Terrain types e.g Grassland, Forest etc <br/>
 
-Content> <br/>
+## Content <br/>
     -Buildings <br/> 
     -Resource Generation <br/>
     -Resource Consumption <br/>
