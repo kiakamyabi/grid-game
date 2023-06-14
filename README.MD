@@ -171,4 +171,4 @@ Add any resource that is confused. Add any resource that has its capacity increa
 >}, <br>
 >} <br>
 
-With this it will generate 1 Marshmellows per turn and increase the Marshmellows Capacity by 5.
+With this it will generate 1 Marshmellows per turn and increase the Marshmellows Capacity by 5. <br>
