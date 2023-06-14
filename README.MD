@@ -40,7 +40,7 @@ Example: Lumber Mill, Generates 1 Lumber, Consumes 1 Tree Log, Increases storage
 6. Advancing the turn will then trigger the end of turn effects such as resource generation/consumption.
 Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log, +5 Tree Log Storage) and a Lumber Mill(+1 Lumber, -1 Tree Log, +5 Lumber Storage), on turn end the storage of Lumber will increase by 1 and will continue to do so every turn until the limit is hit. This is tracked in cellFeatures which you can see in the console.
 
-## Configs:
+## Configs
 ### How to change the world grid size
 Locate const numRow and const numCols in the script.<br>
 Change the number of rows/columns are you see fit.<br>
@@ -53,19 +53,20 @@ Example to make a 20 by 20 grid for the world map<br>
 >const numRow = 20 <br>
 >const numCol = 20 <br>
 
-### Renaming Cell Features
-If for some reason you want to rename the name of the objects in cellFeatures you can do so by adjusting the key variables. <br>
+### Renaming cell features <br>
+If for some reason you want to rename the name of the cell features you can do so by adjusting the key variables. <br>
 
 >const cellFeaturesBuildingsKey = Key name for the buildings array in cellFeatures; <br>
 
 Example to rename array that holds buildings of cell from buildings [] to renamedBuildings []: <br>
 
->const cellFeaturesBuildingsKey = renamedBuildings <br/>
+>const cellFeaturesBuildingsKey = renamedBuildings <br>
 
-### RENAME OR ADD MORE TERRAIN <br/>
-Go to the generateTerrain function. In the function there is an array that holds the terrain types, adjust or add terrain
-as you see fit. <br/>
-Example to add new terrain type Marshmellow Hills: <br/>
+### Rename or add more terrain <br>
+Go to the generateTerrain function. <br>
+In the function there is an array that holds the terrain types, adjust or add terrain as you see fit. <br>
+
+Example to add new terrain type Marshmellow Hills: <br>
    1 Locate const terrainTypes in the generateTerrain() function. <br/>
     Should look like this >  const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest']; <br/>
    2 Add Marshmellow Hills to the array. <br/>
