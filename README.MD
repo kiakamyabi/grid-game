@@ -48,15 +48,18 @@ Change the number of rows/columns are you see fit.<br>
 >const numRow = number of rows <br>
 >const numCols = number of columns <br>
 
-Example to make a 20 by 20 grid for the world map:<br>
+Example to make a 20 by 20 grid for the world map<br>
 
 >const numRow = 20 <br>
 >const numCol = 20 <br>
 
 ### Renaming Cell Features
-If for some reason you want to rename the features in cellFeatures you can do so by adjusting the key variables. <br/>
-    const cellFeaturesBuildingsKey = Key name for the buildings array in cellFeatures; <br/>
-Example to rename array that holds buildings of cell from buildings [] to renamedBuildings []: <br/>
+If for some reason you want to rename the name of the objects in cellFeatures you can do so by adjusting the key variables. <br>
+
+    const cellFeaturesBuildingsKey = Key name for the buildings array in cellFeatures; <br>
+
+Example to rename array that holds buildings of cell from buildings [] to renamedBuildings []: <br>
+
     const cellFeaturesBuildingsKey = renamedBuildings <br/>
 
 ### RENAME OR ADD MORE TERRAIN <br/>
