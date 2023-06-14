@@ -56,11 +56,11 @@ Example to make a 20 by 20 grid for the world map<br>
 ### Renaming Cell Features
 If for some reason you want to rename the name of the objects in cellFeatures you can do so by adjusting the key variables. <br>
 
-    const cellFeaturesBuildingsKey = Key name for the buildings array in cellFeatures; <br>
+>const cellFeaturesBuildingsKey = Key name for the buildings array in cellFeatures; <br>
 
 Example to rename array that holds buildings of cell from buildings [] to renamedBuildings []: <br>
 
-    const cellFeaturesBuildingsKey = renamedBuildings <br/>
+>const cellFeaturesBuildingsKey = renamedBuildings <br/>
 
 ### RENAME OR ADD MORE TERRAIN <br/>
 Go to the generateTerrain function. In the function there is an array that holds the terrain types, adjust or add terrain
