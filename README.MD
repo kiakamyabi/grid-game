@@ -137,32 +137,38 @@ Rename Tree Logs in the name and the tag for the object like this <br>
 >}, <br>
 >} <br>
 
-Now you have basically made a new resource and will need to update over the old one where it was used in buildingData.<br/>
-Here is an example for adding the Marshmellow Resource <br/>
-     const resourceTypes {
-        'Marshmellows': {
-        name: 'Marshmellows',
-        categoryEconomicSector: 'Secondary',
-        categoryGrouping: ['Food'],
-        categoryTier: '2',
-        amount: 0,
-        capacity: 0,
-        },
-    } <br/>
+Now you have basically made a new resource and will need to update over the old one where it was used in buildingData.<br>
+Here is an example for adding the Marshmellow Resource <br>
 
-ADD OR CHANGE BUILDINGS
-If you want to adjust or add new buildings you must go to the buildingData object where all the data is.
-If you wanted to add a new building...
-Give the building a name and match it to the name of the object. Pick the right category. Add what it will generate based on a resource type in resourceTypes. Add any resource that is confused. Add any resource that has its capacity increased.
-    const buildingData = {
-    'Marshmellow Kitchen': {
-        name: 'Marshmellow Kitchen',
-        category: 'Production',
-        resourcesGenerated: {'Marshmellows': 1,},
-        resourcesConsumed: {},
-        capacityIncrease: {
-        'Marshmellows': 5,
-        },
-        },
-    }
+>const resourceTypes { <br>
+>'Marshmellows': { <br>
+>name: 'Marshmellows', <br>
+>categoryEconomicSector: 'Secondary', <br>
+>categoryGrouping: ['Food'], <br>
+>categoryTier: '2', <br>
+>amount: 0, <br>
+>capacity: 0, <br>
+>}, <br>
+>} <br>
+
+## Add or change building
+If you want to adjust or add new buildings you must go to the buildingData object. <br>
+If you wanted to add a new building <br>
+Give the building a name and match it to the name of the object. <br>
+Pick the right category. <br>
+Add what it will generate based on a resource type in resourceTypes. <br>
+Add any resource that is confused. Add any resource that has its capacity increased. <br>
+
+>const buildingData = { <br>
+>'Marshmellow Kitchen': { <br>
+>name: 'Marshmellow Kitchen', <br>
+>category: 'Production', <br>
+>resourcesGenerated: {'Marshmellows': 1,}, <br>
+>resourcesConsumed: {}, <br>
+>capacityIncrease: { <br>
+>'Marshmellows': 5, <br>
+>}, <br>
+>}, <br>
+>} <br>
+
 With this it will generate 1 Marshmellows per turn and increase the Marshmellows Capacity by 5.
