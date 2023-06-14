@@ -113,28 +113,30 @@ Go to the object const resourceTypes.<br>
 This is where all the Resource Type data is.  <br>
 If you wanted to rename Tree Logs to Wooden Logs <br>
 
-    const resourceTypes {<br>
-    'Tree Logs': { <br>
-    name: 'Tree Logs', <br>
-    categoryEconomicSector: 'Primary', <br>
-    categoryGrouping: ['Wood', 'Construction Material'], <br>
-    categoryTier: '1', <br>
-    amount: 0, <br>
-    capacity: 0, <br>
-    }, <br>
-    } <br>
+>const resourceTypes {<br>
+>'Tree Logs': { <br>
+>name: 'Tree Logs', <br>
+>categoryEconomicSector: 'Primary', <br>
+>categoryGrouping: ['Wood', 'Construction Material'], <br>
+>categoryTier: '1', <br>
+>amount: 0, <br>
+>capacity: 0, <br>
+>}, <br>
+>} <br>
 
 Rename Tree Logs in the name and the tag for the object like this <br>
-    const resourceTypes {
-        'Wood Logs': {
-        name: 'Wood Logs',
-        categoryEconomicSector: 'Primary',
-        categoryGrouping: ['Wood', 'Construction Material'],
-        categoryTier: '1',
-        amount: 0,
-        capacity: 0,
-        },
-    } <br/>
+
+>const resourceTypes { <br>
+>'Wood Logs': { <br>
+>name: 'Wood Logs', <br>
+>categoryEconomicSector: 'Primary', <br>
+>categoryGrouping: ['Wood', 'Construction Material'], <br>
+>categoryTier: '1', <br>
+>amount: 0, <br>
+>capacity: 0, <br>
+>},
+>} <br>
+
 Now you have basically made a new resource and will need to update over the old one where it was used in buildingData.<br/>
 Here is an example for adding the Marshmellow Resource <br/>
      const resourceTypes {
