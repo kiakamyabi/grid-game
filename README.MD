@@ -42,11 +42,11 @@ Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log,
 
 ## Configs:
 ### How to change the world grid size
-Locate const numRow and const numCols in the script.
-Change the number of rows/columns are you see fit.
+Locate const numRow and const numCols in the script.<br>
+Change the number of rows/columns are you see fit.<br>
 `const numRow = number of rows`
 `const numCols = number of columns`
-Example to make a 20 by 20 grid for the world map:
+Example to make a 20 by 20 grid for the world map:<br>
 >const numRow = 20 
 >const numCol = 20 
 
