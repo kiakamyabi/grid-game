@@ -67,13 +67,17 @@ Go to the generateTerrain function. <br>
 In the function there is an array that holds the terrain types, adjust or add terrain as you see fit. <br>
 
 Example to add new terrain type Marshmellow Hills: <br>
-   1 Locate const terrainTypes in the generateTerrain() function. <br/>
-    Should look like this >  const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest']; <br/>
-   2 Add Marshmellow Hills to the array. <br/>
-    const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest', 'Marshmellow Hills']; <br/>
-    Now in world gen it will add that terrain type to the map. However it will not colour the cell or let you build any buildings on that type of terrain. <br/>
+1. Locate const terrainTypes in the generateTerrain() function. <br>
 
-CHANGE WHAT BUILDINGS CAN BE BUILT ON WHAT TERRAIN <br/>
+>const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest']; <br>
+
+2. Add Marshmellow Hills to the array. <br>
+
+>const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest', 'Marshmellow Hills']; <br>
+
+Now in world gen it will add that terrain type to the map. However it will not colour the cell or let you build any buildings on that type of terrain. <br>
+
+### CHANGE WHAT BUILDINGS CAN BE BUILT ON WHAT TERRAIN <br>
     Go to the const terrainBuildings object. Inside that object is each terrain shown by an array, in that array are the buildings that can be built in that type of terrain. <br/>
 Example: <br/>
     const terrainBuildings = {
