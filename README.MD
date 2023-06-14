@@ -4,7 +4,7 @@ Currently the UI is bare bones and the game information is shown in the console.
 # Objective:
 The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps.
 
-Step 1 - World Generation and Economy <br/>
+## Step 1 - World Generation and Economy <br/>
     -Use perlin noise to generate a consistent and high quality world. <br/>
     -The capacity to use seeds so the player can customize the world before game start. <br/>
     -The world must have different terrain types and features on each 'cell' to differentiate between them. <br/>
@@ -12,8 +12,8 @@ Step 1 - World Generation and Economy <br/>
     -Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc. <br/>
     -Expeditions. Player will need to explore cells which can have special features before they can colonize it. <br/>
 
-Step 2 - Military <br/>
-Step 3 - Ai <br/>
+## Step 2 - Military <br/>
+## Step 3 - Ai <br/>
 
 Current features: <br/>
 World Generation> <br/>
