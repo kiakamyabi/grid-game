@@ -42,19 +42,20 @@ Example: If in Cell 1-1 which you claimed you built a Logging Shack(+1 Tree Log,
 
 ## Configs:
 ### How to change the world grid size
+Locate const numRow and const numCols in the script. Change the number of rows/columns are you see fit.
     const numRow = number of rows
     const numCols = number of columns
-Example to make a 20 by 20 grid for the world map: <br/>
-    const numRow = 20 <br/>
-    const numCol = 20 <br/>
+Example to make a 20 by 20 grid for the world map:
+    const numRow = 20 
+    const numCol = 20 
 
-RENAMING CELL FEATURES <br/>
+## Renaming Cell Features
 If for some reason you want to rename the features in cellFeatures you can do so by adjusting the key variables. <br/>
     const cellFeaturesBuildingsKey = Key name for the buildings array in cellFeatures; <br/>
 Example to rename array that holds buildings of cell from buildings [] to renamedBuildings []: <br/>
     const cellFeaturesBuildingsKey = renamedBuildings <br/>
 
-RENAME OR ADD MORE TERRAIN <br/>
+## RENAME OR ADD MORE TERRAIN <br/>
 Go to the generateTerrain function. In the function there is an array that holds the terrain types, adjust or add terrain
 as you see fit. <br/>
 Example to add new terrain type Marshmellow Hills: <br/>
