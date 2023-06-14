@@ -3,6 +3,7 @@
 //Decide on buildings limit
 //Put configs and stuff in another file at some point
 //Make special menu for when the player is claiming the first cell, like settling turn 1 for Civ
+//Add consequence to lack of resource for resource consumption
 
 //Data
 const gameWorld = document.getElementById('game-grid')
@@ -231,7 +232,7 @@ function resourceChangePerTurn() {
         if (cell[cellFeaturesCapacityKey][resource]) {
           const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
           const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
-
+          //Uses Math.min to not go over the storage limit
           if (currentAmount < storageCapacity) {
             const remainingCapacity = storageCapacity - currentAmount;
             const generatedAmount = Math.min(amount, remainingCapacity);
@@ -240,7 +241,7 @@ function resourceChangePerTurn() {
         }
       }
 
-      //Handle resource consumption (need to have 'else statement' for if resource isn't available)
+      //Handle resource consumption 
       for (const resource in buildingInfo.resourcesConsumed) {
         const amount = buildingInfo.resourcesConsumed[resource];
 
@@ -275,21 +276,21 @@ function generateBuildingCategoryTabs() {
   return tabContent;
 }
 
-function generateBuildingLists(terrainType) {
-  let buildingListContent = '';
+function generateBuildingMenu(terrainType) {
+  let buildingMenuContent = '';
   for (const category in buildingCategories) {
     const buildings = Object.values(buildingData)
       .filter((building) => building.category === category && terrainBuildings[terrainType].includes(building.name));
 
     if (buildings.length > 0) {
-      buildingListContent += `<div class="building-tab" data-category="${category}">`;
+      buildingMenuContent += `<div class="building-tab" data-category="${category}">`;
       for (const building of buildings) {
-        buildingListContent += `<button class="building-btn" data-building="${building.name}">${building.name}</button>`;
+        buildingMenuContent += `<button class="building-btn" data-building="${building.name}">${building.name}</button>`;
       }
-      buildingListContent += `</div>`;
+      buildingMenuContent += `</div>`;
     }
   }
-  return buildingListContent;
+  return buildingMenuContent;
 }
 
 function generateClaimedCellMenuContent(terrainType) {
@@ -299,7 +300,7 @@ function generateClaimedCellMenuContent(terrainType) {
     </div>
 
   <div id="building-tab-container">
-    ${generateBuildingLists(terrainType)}
+    ${generateBuildingMenu(terrainType)}
   </div>`;
 
   return menuContent;
@@ -324,7 +325,6 @@ function generateUnclaimedCellMenuContent() {
 }
 
 function showBuildingTabs(category) {
-  //Show building buttons
   const buildingTabContainerId = document.getElementById('building-tab-container');
   buildingTabContainerId.style.display = 'block';
 
@@ -343,16 +343,16 @@ function openClaimedCellMenu(cellId) {
   const selectedCell = cellFeatures[cellId];
   const terrainType = selectedCell.terrainType;
   const menuContent = generateClaimedCellMenuContent(terrainType);
-//Update menu
+  //Update menu
   const menuContentContainer = document.getElementById('building-menu');
   menuContentContainer.innerHTML = menuContent;
-//Show menu
+  //Show menu
   menuContentContainer.style.display = 'block';
- //Hide building buttons to show later
+  //Hide building buttons to show later
   const buildingTabContainerId = document.getElementById('building-tab-container');
   buildingTabContainerId.style.display = 'none';
 
-//Event listener for tabs.
+  //Event listener for tabs.
   const tabContainer = document.getElementById('building-category-tab-container');
   tabContainer.addEventListener('click', (event) => {
     const target = event.target;
@@ -402,7 +402,7 @@ function checkForAdjacentClaimedCell(cellId) {
 
 function claimCell(cellId, clickedElement) {
   if (firstClaimedCell === null) {
-    firstClaimedCell = selectedCellId;
+    firstClaimedCell = cellId;
   }
   playerClaimedCells.push(cellId);
 
