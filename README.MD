@@ -6,12 +6,12 @@ Currently the UI is bare bones and the game information is shown in the console.
 The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps.
 
 ## Step 1 - World Generation and Economy 
-    + Use perlin noise to generate a consistent and high quality world.
-    - Use seeds so the player can customize the world before game start. 
-    - The world must have different terrain types and features on each 'cell' to differentiate between them. 
-    - Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population. 
-    - Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc. 
-    - Expeditions. Player will need to explore cells which can have special features before they can colonize it. 
+- Use perlin noise to generate a consistent and high quality world.
+- Use seeds so the player can customize the world before game start. 
+- The world must have different terrain types and features on each 'cell' to differentiate between them. 
+- Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population. 
+- Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc. 
+- Expeditions. Player will need to explore cells which can have special features before they can colonize it. 
 
 ### Step 2 - Military 
 ### Step 3 - Ai
