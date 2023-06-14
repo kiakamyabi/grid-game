@@ -89,19 +89,20 @@ If you wanted to adjust the type of buildings that can be constructed in a terra
 >const terrainBuildings = {Grass:<['Example Building'],<br>
 Marshmellow Hills: ['Example Building']} <br>
 
-This will allow Example Building to be built in both Grass and Marshmellow Hills type terrain. <br/>
+This will allow Example Building to be built in both Grass and Marshmellow Hills type terrain. <br>
 
-CHANGE COLOUR OF CELLS WITH DIFFERENT TERRAIN TYPES <br/>
-If you want to change the colour of cells with specific terrain types you must go to the stylesheet.css and change it there. <br/>
-Example:<br/>
-    [data-terrain="Grass"] {
-    background-color: #8bc34a; 
-    } <br/>
-[data-terrain="Grass"] represents the cells with the appropriate terrain. It tracks it based on the data attribute on each cell. The background-color represents the colour of the cells with that terrain type. So if you wanted to change the colour of the Grass terrain to red... <br/>
-Example: <br/>
-    [data-terrain="Grass"] {
-    background-color: red; 
-    } <br/>
+### Change colour of cells with different terrain types <br/>
+If you want to change the colour of cells with specific terrain types you must go to the stylesheet.css and change it there. <br>
+
+>[data-terrain="Grass"] {background-color: #8bc34a;} <br>
+
+[data-terrain="Grass"] represents the cells with the appropriate terrain. <br>
+It tracks it based on the data attribute on each cell. <br>
+The background-color represents the colour of the cells with that terrain type. <br>
+So if you wanted to change the colour of the Grass terrain to red<br>
+
+>[data-terrain="Grass"] {background-color: red; } <br>
+
 This will change all cells with the Grass terrain to have a red colour. If you want to add a new terrain you have made and give it a yellow colour, e.g Marshmellow Hills <br/>
 Example: <br/>
     [data-terrain="Marshmellow Hills"] {
