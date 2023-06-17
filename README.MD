@@ -3,7 +3,7 @@ This is a browser based custom game I am making using vanilla JS. <br>
 Currently the UI is bare bones and the game information is shown in the console. <br>
 
 # Objective:
-The current objective is to make a playable game with mildly indepth mechanics related to building an empire. This will be done in broad steps. <br>
+The current objective is to make a playable game with mildly indepth mechanics related to building an empire, done in broad steps. <br>
 
 ## Step 1 - World Generation and Economy 
 - Use perlin noise to generate a consistent and high quality world. <br>
@@ -13,10 +13,18 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc.  <br>
 - Expeditions. Player will need to explore cells which can have special features before they can colonize it. <br>
 ### Buildings
-- [x] Building Construction Cost
+- [x] Be able to build on individual cells
+- [x] Building construction cost
+- [x] Building resource output
+- [x] Building resource input
+- [] Building construction time
+- [x] Unique buildings for terrain types
+- [] Building UI with description
+- [x] Building storage capacity
 
-### Step 2 - Military <br>
-### Step 3 - Ai <br>
+
+
+### Future Steps - Military, AI, Lore <br>
 
 # Current features <br>
 ## World Generation <br>
