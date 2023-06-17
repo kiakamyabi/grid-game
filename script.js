@@ -3,8 +3,8 @@
 //Decide on buildings limit
 //Put configs and stuff in another file at some point
 //Make special menu for when the player is claiming the first cell, like settling turn 1 for Civ
-//Add consequence to lack of resource for resource consumption
-//Resource cost for construction
+//Add a way for players to interact with the building priority system.
+
 
 //Data
 const gameWorld = document.getElementById('game-grid')
@@ -45,6 +45,16 @@ const buildingCategories = {
 };
 
 const buildingData = {
+  //resourcesGenerated = The resources that the building will generate per turn, meant to broadly represent output.
+  //resourcesConsumed = The resources that the building will consume per turn, meant to broadly represent input.
+  /*turnPriority = The priority a building will have in the end of turn calculations. Lower number = higher priority. For resource generation
+  and consumption, issues can arise if buildings are not in the correct order of priority. For example a Lumber Mill will need 1 Tree Log as
+  an input to generate Lumber. If there is no Tree Logs in storage the Lumber Mill cannot function. If there is a Logging Shack to generate
+  1 Tree Log but it comes later in priority it means at the end of turn the Lumber Mill will check for Tree Logs in storage and find nothing.
+  THEN the Logging Shack will produce the Tree Log, putting it into storage for next turn. Therefore the Logging Shack must have higher priority
+  for the Lumber Mill to operate on the same turn.*/
+  //capacityIncrease = Storage capacity is increasing for a resource.
+  //resourcesRequired = The cost to construct a building.
   'Warehouse': {
     name: 'Warehouse',
     category: 'Other',
@@ -82,9 +92,22 @@ const buildingData = {
     resourcesGenerated: {},
     resourcesConsumed: {},
   },
+  'Logging Shack': {
+    name: 'Logging Shack',
+    category: 'Industry',
+    turnPriority: 1,
+    resourcesGenerated: {
+      'Tree Logs': 1
+    },
+    resourcesConsumed: {},
+    capacityIncrease: {
+      'Tree Logs': 5,
+    },
+  },
   'Lumber Mill': {
     name: 'Lumber Mill',
     category: 'Industry',
+    turnPriority: 2,
     resourcesGenerated: {
       'Lumber': 1
     },
@@ -93,17 +116,6 @@ const buildingData = {
     },
     capacityIncrease: {
       'Lumber': 5,
-    },
-  },
-  'Logging Shack': {
-    name: 'Logging Shack',
-    category: 'Industry',
-    resourcesGenerated: {
-      'Tree Logs': 1
-    },
-    resourcesConsumed: {},
-    capacityIncrease: {
-      'Tree Logs': 5,
     },
   },
   'Fishing Dock': {
@@ -216,58 +228,77 @@ function resourceChangePerTurn() {
     const totalResourceGeneration = {};
     const totalResourceConsumption = {};
 
-    //Loop through buildings in all cells
+    //Sort buildings based on priority. Lower = higher priority.
+    buildings.sort((a, b) => {
+      return buildingData[a].turnPriority - buildingData[b].turnPriority;
+    });
+
+    //Loop through buildings in the cell
     for (const building of buildings) {
       const buildingInfo = buildingData[building];
-      //console.log(`Building constructed ${building}`)
 
-      //Handle resource generation
-      for (const resource in buildingInfo.resourcesGenerated) {
-        const amount = buildingInfo.resourcesGenerated[resource];
+      //Check if building has required resources to be consumed in storage
+      let resourcesToBeConsumedAvailable = true;
 
-        //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
-        if (totalResourceGeneration[resource]) {
-          totalResourceGeneration[resource] += amount;
+      for (const resource in buildingInfo.resourcesConsumed) {
+        const requiredAmount = buildingInfo.resourcesConsumed[resource];
+
+        if (cell[cellFeaturesCapacityKey][resource]) {
+          const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
+
+          if (currentAmount < requiredAmount) {
+            resourcesToBeConsumedAvailable = false;
+            break; 
+          }
         } else {
-          totalResourceGeneration[resource] = amount;
+          resourcesToBeConsumedAvailable = false;
+          break; 
+        }
+      }
+
+      if (resourcesToBeConsumedAvailable) {
+        //Resource consumption
+        for (const resource in buildingInfo.resourcesConsumed) {
+          const consumedAmount = buildingInfo.resourcesConsumed[resource];
+          cell[cellFeaturesCapacityKey][resource].amount -= consumedAmount;
+
+          //Tracks resource consumption by putting it in a placeholder to be put in cellFeatures
+          if (totalResourceConsumption[resource]) {
+            totalResourceConsumption[resource] += consumedAmount;
+          } else {
+            totalResourceConsumption[resource] = consumedAmount;
+          }
         }
 
-        //Checks for resource capacity
-        if (cell[cellFeaturesCapacityKey][resource]) {
+        //Resource generation
+        for (const resource in buildingInfo.resourcesGenerated) {
+          const generatedAmount = buildingInfo.resourcesGenerated[resource];
+
+         //Checks for resource capacity
+         if (cell[cellFeaturesCapacityKey][resource]) {
           const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
           const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
           //Uses Math.min to not go over the storage limit
           if (currentAmount < storageCapacity) {
             const remainingCapacity = storageCapacity - currentAmount;
-            const generatedAmount = Math.min(amount, remainingCapacity);
-            cell[cellFeaturesCapacityKey][resource].amount += generatedAmount;
+            const generatedAmountFinal = Math.min(generatedAmount, remainingCapacity);
+            cell[cellFeaturesCapacityKey][resource].amount += generatedAmountFinal;
           }
         }
-      }
 
-      //Handle resource consumption 
-      for (const resource in buildingInfo.resourcesConsumed) {
-        const amount = buildingInfo.resourcesConsumed[resource];
-
-         //Tracks resource consumption by putting it in a placeholder to be put in cellFeatures
-         if (totalResourceConsumption[resource]) {
-          totalResourceConsumption[resource] += amount;
-        } else {
-          totalResourceConsumption[resource] = amount;
+          //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
+          if (totalResourceGeneration[resource]) {
+            totalResourceGeneration[resource] += generatedAmount;
+          } else {
+            totalResourceGeneration[resource] = generatedAmount;
+          }
         }
-        
-        if (cell[cellFeaturesCapacityKey][resource]) {
-          if (cell[cellFeaturesCapacityKey][resource].amount >= amount) {
-            cell[cellFeaturesCapacityKey][resource].amount -= amount;
-          } 
-        }
+
       }
-
-      //Updates cellFeature for resource generation & consumption, using placeholders.
-      cell[cellFeaturesResourceGenerationKey] = totalResourceGeneration;
-      cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumption;
-
     }
+    //Updates cellFeature for resource generation & consumption, using placeholders.
+    cell[cellFeaturesResourceGenerationKey] = totalResourceGeneration;
+    cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumption;
   }
 }
 
@@ -492,7 +523,6 @@ function handleCellClick(event) {
 
 }
 
-//Advance the turn and trigger end of turn changes
 function advanceTurn() {
   currentTurn++;
   resourceChangePerTurn()
@@ -500,7 +530,7 @@ function advanceTurn() {
   console.log(cellFeatures);
 }
 
-//Need to make button for game start
+//Need to make button and menu for game start
 worldGeneration()
 
 gameWorld.addEventListener('click', handleCellClick);
