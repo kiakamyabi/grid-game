@@ -4,6 +4,7 @@
 //Put configs and stuff in another file at some point
 //Make special menu for when the player is claiming the first cell, like settling turn 1 for Civ
 //Add consequence to lack of resource for resource consumption
+//Resource cost for construction
 
 //Data
 const gameWorld = document.getElementById('game-grid')
@@ -53,6 +54,9 @@ const buildingData = {
       'Tree Logs': 5,
       'Lumber': 5
     },
+    resourcesRequired: {
+      'Lumber': 1
+    }
   },
   'Cabin': {
     name: 'Cabin',
@@ -198,7 +202,7 @@ function handleStorageCapacityIncrease(cellId, buildingInfo) {
 
       if (previousCapacity !== newCapacity) {
         console.log(
-        `Cell: ${cellId}, Resource: ${resource}, Capacity Increased By: ${increaseAmount} (From ${previousCapacity} To ${newCapacity})`);
+        `Cell: ${cellId}. Resource: ${resource}. Capacity Increased By: ${increaseAmount} (${previousCapacity} To ${newCapacity})`);
       }
     }
   }
@@ -372,7 +376,6 @@ function openUnclaimedCellMenu(){
   menuContentContainer.style.display = 'flex';
 }
 
-//Tracks adjacent cells into an array
 function getAdjacentCells(cellId) {
   const cellIdParts = cellId.split('-');
   const row = parseInt(cellIdParts[1]);
@@ -418,6 +421,34 @@ function claimCell(cellId, clickedElement) {
   console.log(playerClaimedCells)
 }
 
+function constructBuilding(cellId, buildingName) {
+  const cell = cellFeatures[cellId];
+  const buildingInfo = buildingData[buildingName];
+
+  //Check if required resources are available
+  for (const resource in buildingInfo.resourcesRequired) {
+    const requiredAmount = buildingInfo.resourcesRequired[resource];
+    
+    if (cell[cellFeaturesCapacityKey][resource].amount < requiredAmount) {
+      console.log(`Insufficient ${resource} to construct ${buildingName}`);
+      return;
+    }
+  
+  //Use required resources for construction
+    else {
+      const requiredAmount = buildingInfo.resourcesRequired[resource];
+      cell[cellFeaturesCapacityKey][resource].amount -= requiredAmount;
+    }
+  }
+
+  //Add the building to the cell's buildings list
+  cell[cellFeaturesBuildingsKey].push(buildingName);
+
+  handleStorageCapacityIncrease(cellId, buildingInfo);
+
+  console.log(`Building constructed: ${buildingName}`);
+}
+
 function handleCellClick(event) {
   const clickedElement = event.target;
   
@@ -452,16 +483,7 @@ function handleCellClick(event) {
   } else if (clickedElement.classList.contains('building-btn')) {
     const buildingName = clickedElement.getAttribute('data-building');
 
-      if (selectedCellId) {
-        const cell = cellFeatures[selectedCellId];
-        //Add building to cellFeatures
-        cell[cellFeaturesBuildingsKey].push(buildingName);
-        console.log(`Building: ${buildingName} added to ${selectedCellId}`);
-
-        //Handle capacity of resources increased from the newly added building
-        const buildingInfo = buildingData[buildingName];
-        handleStorageCapacityIncrease(selectedCellId, buildingInfo);
-      }
+    constructBuilding(selectedCellId, buildingName)
 
   } else if (clickedElement.classList.contains('claim-cell-btn')) {
       //Handle claim button 
