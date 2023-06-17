@@ -4,7 +4,8 @@
 //Put configs and stuff in another file at some point
 //Make special menu for when the player is claiming the first cell, like settling turn 1 for Civ
 //Add a way for players to interact with the building priority system.
-
+/*Decide on final building system principle. Will it be based on individual buildings or generalised concepts like industries that can be expanded.
+Maybe both?*/
 
 //Data
 const gameWorld = document.getElementById('game-grid')

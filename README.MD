@@ -12,19 +12,30 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population.<br>
 - Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc.  <br>
 - Expeditions. Player will need to explore cells which can have special features before they can colonize it. <br>
-### Buildings
-- [x] Be able to build on individual cells
-- [x] Building construction cost
-- [x] Building resource output
-- [x] Building resource input
-- [ ] Building construction time
-- [x] Unique buildings for terrain types
-- [ ] Building UI with description
-- [x] Building storage capacity
+
+### Buildings <br>
+- [x] Be able to build on individual cells <br>
+- [x] Building construction cost <br>
+- [x] Building resource output <br>
+- [x] Building resource input <br>
+- [ ] Building construction time <br>
+- [x] Unique buildings for terrain types <br>
+- [ ] Building UI with description <br>
+- [x] Building storage capacity <br>
+- [ ] Building slots or equivalent <br>
+- [ ] Building maintenance system <br>
+
+### Industry <br>
+- [ ] Modifers to effect resource generation <br>
+- [ ] Modifers to effect resource consumption <br>
+- [ ] Modifers to effect resource construction time <br>
+- [ ] Modifers to effect resource storage <br>
+
+### Population <br>
+- [ ] Add it! <br>
+- [ ] Different population types <br>
 
 
-
-### Future Steps - Military, AI, Lore <br>
 
 # Current features <br>
 ## World Generation <br>
