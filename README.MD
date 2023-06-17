@@ -12,6 +12,8 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - Indepth interaction with cells. In the form of specific amount of Trees, Arable Land etc. for resources and  population.<br>
 - Have different playstyles by introducing special mechanics depending on a 'build' path. e.g. Different races for population, different industry styles etc.  <br>
 - Expeditions. Player will need to explore cells which can have special features before they can colonize it. <br>
+### Buildings
+- [x] Building Construction Cost
 
 ### Step 2 - Military <br>
 ### Step 3 - Ai <br>
