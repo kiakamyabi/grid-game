@@ -17,9 +17,9 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - [x] Building construction cost
 - [x] Building resource output
 - [x] Building resource input
-- [] Building construction time
+- [ ] Building construction time
 - [x] Unique buildings for terrain types
-- [] Building UI with description
+- [ ] Building UI with description
 - [x] Building storage capacity
 
 
