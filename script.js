@@ -17,6 +17,7 @@ let selectedCellId = null;
 let currentTurn = 0;
 let playerClaimedCells = [];
 let firstClaimedCell = null; 
+let uniqueBuildingIdIteration = 1;
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
@@ -32,7 +33,6 @@ const terrainBuildings = {
   Mountain: ['Cabin', 'Mine', 'Warehouse'],
   Forest: ['Cabin', 'Lumber Mill', 'Hunting Lodge', 'Logging Shack', 'Warehouse']
 };
-
 const buildingCategories = {
   Production: {
     name: 'Production'
@@ -44,7 +44,6 @@ const buildingCategories = {
     name: 'Other'
   }
 };
-
 const buildingData = {
   //resourcesGenerated = The resources that the building will generate per turn, meant to broadly represent output.
   //resourcesConsumed = The resources that the building will consume per turn, meant to broadly represent input.
@@ -97,6 +96,7 @@ const buildingData = {
     name: 'Logging Shack',
     category: 'Industry',
     turnPriority: 1,
+    constructionTime: 2,
     resourcesGenerated: {
       'Tree Logs': 1
     },
@@ -109,6 +109,7 @@ const buildingData = {
     name: 'Lumber Mill',
     category: 'Industry',
     turnPriority: 2,
+    constructionTime: 4,
     resourcesGenerated: {
       'Lumber': 1
     },
@@ -184,7 +185,6 @@ for (let row = 0; row < numRows; row++) {
         [cellFeaturesCapacityKey]: JSON.parse(JSON.stringify(resourceTypes)),
         [cellFeaturesResourceGenerationKey]: {},
         [cellFeaturesResourceConsumptionKey]: {},
-        
       };
 
       individualCell.setAttribute('data-terrain', terrainType);
@@ -231,12 +231,22 @@ function resourceChangePerTurn() {
 
     //Sort buildings based on priority. Lower = higher priority.
     buildings.sort((a, b) => {
-      return buildingData[a].turnPriority - buildingData[b].turnPriority;
+      return buildingData[a.name].turnPriority - buildingData[b.name].turnPriority;
     });
+
 
     //Loop through buildings in the cell
     for (const building of buildings) {
-      const buildingInfo = buildingData[building];
+      const buildingInfo = buildingData[building.name]
+      console.log(building)
+
+      //Check if building is under construction and reduce construction timer
+      if (building.constructionTime > 0) {
+        building.constructionTime--;
+
+        //Skip resource generation/consumption for buildings under construction
+        continue;
+      }
 
       //Check if building has required resources to be consumed in storage
       let resourcesToBeConsumedAvailable = true;
@@ -473,8 +483,15 @@ function constructBuilding(cellId, buildingName) {
     }
   }
 
-  //Add the building to the cell's buildings list
-  cell[cellFeaturesBuildingsKey].push(buildingName);
+  const buildingTemplate =
+    {
+    name: `${buildingName}`,
+    constructionTime: `${buildingInfo.constructionTime}`,
+    uniqueId: uniqueBuildingIdIteration
+    };
+
+  cell[cellFeaturesBuildingsKey].push(buildingTemplate);
+  uniqueBuildingIdIteration++
 
   handleStorageCapacityIncrease(cellId, buildingInfo);
 
