@@ -181,10 +181,6 @@ for (let row = 0; row < numRows; row++) {
       const terrainType = generateTerrain();
       cellFeatures[individualCell.id] = {
         terrainType,
-        [cellFeaturesBuildingsKey]: [],
-        [cellFeaturesCapacityKey]: JSON.parse(JSON.stringify(resourceTypes)),
-        [cellFeaturesResourceGenerationKey]: {},
-        [cellFeaturesResourceConsumptionKey]: {},
       };
 
       individualCell.setAttribute('data-terrain', terrainType);
@@ -223,7 +219,8 @@ function handleStorageCapacityIncrease(cellId, buildingInfo) {
 
 function resourceChangePerTurn() {
   //Loop through all cells
-  for (const cellId in cellFeatures) {
+  for (const cellId of playerClaimedCells) {
+    console.log(cellId)
     const cell = cellFeatures[cellId];
     const buildings = cell[cellFeaturesBuildingsKey];
     const totalResourceGeneration = {};
@@ -238,11 +235,11 @@ function resourceChangePerTurn() {
     //Loop through buildings in the cell
     for (const building of buildings) {
       const buildingInfo = buildingData[building.name]
-      console.log(building)
 
       //Check if building is under construction and reduce construction timer
       if (building.constructionTime > 0) {
         building.constructionTime--;
+        console.log(`${building.name}. Construction timer: ${building.constructionTime}`)
 
         //Skip resource generation/consumption for buildings under construction
         continue;
@@ -458,6 +455,11 @@ function claimCell(cellId, clickedElement) {
   //Disable the claim button for the claimed cell
   const claimButton = clickedElement;
   claimButton.disabled = true;
+  //
+  cellFeatures[cellId][cellFeaturesCapacityKey] = JSON.parse(JSON.stringify(resourceTypes)),
+  cellFeatures[cellId][cellFeaturesResourceGenerationKey] = {};
+  cellFeatures[cellId][cellFeaturesResourceConsumptionKey] = {};
+  cellFeatures[cellId][cellFeaturesBuildingsKey] = [];
 
   console.log(`Cell: ${cellId} claimed.`);
   console.log(playerClaimedCells)
@@ -482,7 +484,7 @@ function constructBuilding(cellId, buildingName) {
       cell[cellFeaturesCapacityKey][resource].amount -= requiredAmount;
     }
   }
-
+  //The template of the building being added to cellFeatures.
   const buildingTemplate =
     {
     name: `${buildingName}`,
