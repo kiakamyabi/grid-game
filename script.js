@@ -21,12 +21,25 @@ let uniqueBuildingIdIteration = 1;
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
-const cellFeaturesResourceGenerationKey = 'resourceGeneration'; 
-const cellFeaturesResourceConsumptionKey = 'resourceConsumption';
+const cellFeaturesResourceGenerationKey = 'resourceGenerationLastTurn'; 
+const cellFeaturesResourceConsumptionKey = 'resourceConsumptionLastTurn';
+const cellFeaturesResourcePopulation = 'population';
 //Configs
 const numRows = 15;
 const numCols = 15;
 
+const raceData = {
+  'Human':{
+    nameSingular: 'Human',
+    namePlural: 'Humans',
+    workforceProportion: 0.75,
+    defaultProductionRate: 1,
+      'productionRates':{
+        
+      }
+
+  }
+}
 const terrainBuildings = {
   Grass: ['Cabin', 'Farm', 'Hunting Lodge', 'Warehouse'],
   Water: ['Cabin', 'Saltworks', 'Fishing Dock', 'Warehouse'],
@@ -109,7 +122,7 @@ const buildingData = {
     name: 'Lumber Mill',
     category: 'Industry',
     turnPriority: 2,
-    constructionTime: 4,
+    constructionTime: 2,
     resourcesGenerated: {
       'Lumber': 1
     },
@@ -141,31 +154,24 @@ const resourceTypes = {
     name: 'Tree Logs',
     categoryEconomicSector: 'Primary',
     categoryGrouping: ['Wood', 'Construction Material'],
-    categoryTier: '1',
-    amount: 0,
-    capacity: 0,
+    categoryTier: '1'
   },
 
   'Lumber': {
     name: 'Lumber',
     categoryEconomicSector: 'Secondary',
     categoryGrouping: ['Wood', 'Construction Material'],
-    categoryTier: '2',
-    amount: 0,
-    capacity: 0,
+    categoryTier: '2'
   },
 
   'Wooden Chair': {
     name: 'Wooden Chair',
     categoryEconomicSector: 'Secondary',
     categoryGrouping: ['Wood'],
-    categoryTier: '3',
-    amount: 0,
-    capacity: 0,
+    categoryTier: '3'
   },
 };
 
-//World Map Generation
 function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
     const newRow = document.createElement('tr');
@@ -223,8 +229,8 @@ function resourceChangePerTurn() {
     console.log(cellId)
     const cell = cellFeatures[cellId];
     const buildings = cell[cellFeaturesBuildingsKey];
-    const totalResourceGeneration = {};
-    const totalResourceConsumption = {};
+    const totalResourceGenerationLastTurn = {};
+    const totalResourceConsumptionLastTurn = {};
 
     //Sort buildings based on priority. Lower = higher priority.
     buildings.sort((a, b) => {
@@ -271,10 +277,10 @@ function resourceChangePerTurn() {
           cell[cellFeaturesCapacityKey][resource].amount -= consumedAmount;
 
           //Tracks resource consumption by putting it in a placeholder to be put in cellFeatures
-          if (totalResourceConsumption[resource]) {
-            totalResourceConsumption[resource] += consumedAmount;
+          if (totalResourceConsumptionLastTurn[resource]) {
+            totalResourceConsumptionLastTurn[resource] += consumedAmount;
           } else {
-            totalResourceConsumption[resource] = consumedAmount;
+            totalResourceConsumptionLastTurn[resource] = consumedAmount;
           }
         }
 
@@ -295,18 +301,18 @@ function resourceChangePerTurn() {
         }
 
           //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
-          if (totalResourceGeneration[resource]) {
-            totalResourceGeneration[resource] += generatedAmount;
+          if (totalResourceGenerationLastTurn[resource]) {
+            totalResourceGenerationLastTurn[resource] += generatedAmount;
           } else {
-            totalResourceGeneration[resource] = generatedAmount;
+            totalResourceGenerationLastTurn[resource] = generatedAmount;
           }
         }
 
       }
     }
     //Updates cellFeature for resource generation & consumption, using placeholders.
-    cell[cellFeaturesResourceGenerationKey] = totalResourceGeneration;
-    cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumption;
+    cell[cellFeaturesResourceGenerationKey] = totalResourceGenerationLastTurn;
+    cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumptionLastTurn;
   }
 }
 
@@ -455,11 +461,19 @@ function claimCell(cellId, clickedElement) {
   //Disable the claim button for the claimed cell
   const claimButton = clickedElement;
   claimButton.disabled = true;
-  //
-  cellFeatures[cellId][cellFeaturesCapacityKey] = JSON.parse(JSON.stringify(resourceTypes)),
+
+  cellFeatures[cellId][cellFeaturesCapacityKey] = JSON.parse(JSON.stringify(resourceTypes));
+  //Adds amount and capacity to track resource storage
+  for (const key in cellFeatures[cellId][cellFeaturesCapacityKey]) {
+    if (cellFeatures[cellId][cellFeaturesCapacityKey].hasOwnProperty(key)) {
+      cellFeatures[cellId][cellFeaturesCapacityKey][key].amount = 0;
+      cellFeatures[cellId][cellFeaturesCapacityKey][key].capacity = 0;
+    }
+  }
   cellFeatures[cellId][cellFeaturesResourceGenerationKey] = {};
   cellFeatures[cellId][cellFeaturesResourceConsumptionKey] = {};
   cellFeatures[cellId][cellFeaturesBuildingsKey] = [];
+  cellFeatures[cellId][cellFeaturesResourcePopulation] = {};
 
   console.log(`Cell: ${cellId} claimed.`);
   console.log(playerClaimedCells)

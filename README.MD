@@ -24,6 +24,8 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - [x] Building storage capacity <br>
 - [ ] Building slots or equivalent <br>
 - [ ] Building maintenance system <br>
+- [X] Building priority system <br>
+- [ ] Building priority system settings for the player INGAME<br>
 
 ### Industry <br>
 - [ ] Modifers to effect resource generation <br>
