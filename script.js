@@ -24,6 +24,7 @@ const populationTotalTemplate = {
   totalWorkforce: 0,
   availableWorkforce: 0,
   usedWorkforce: 0,
+  populationGrowthLastTurn:0,
 }
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
@@ -40,6 +41,7 @@ const raceData = {
   'Human':{
     nameSingular: 'Human',
     namePlural: 'Humans',
+    populationGrowth: 0.01,
     workforceProportion: 0.75,
     defaultWorkerBaseOutput: 1,
     defaultWorkerOutputModifier: 1,
@@ -53,6 +55,7 @@ const raceData = {
   'Wooden Automaton':{
     nameSingular: 'Wooden Automaton',
     namePlural: 'Wooden Automatons',
+    populationGrowth: 0,
     workforceProportion: 1,
     defaultWorkerBaseOutput: 2,
     defaultWorkerOutputModifier: 1,
@@ -345,14 +348,16 @@ function populationChangePerTurn() {
   for (const cellId of playerClaimedCells){
     const cell = cellFeatures[cellId];
     const populationTotalInCell = cell[cellFeaturesPopulationKey];
-    console.log(populationTotalInCell)
     const individualPopsInCell = cell[cellFeaturesIndividualPopulationKey];
 
     for (const key in individualPopsInCell){
       individualPop = individualPopsInCell[key]
-      individualPop.totalWorkforce = individualPop.totalPopulation * individualPop.workforceProportion;
+      individualPop.populationGrowthLastTurn = Math.floor(individualPop.populationGrowth * individualPop.totalPopulation);
+      individualPop.totalPopulation += individualPop.populationGrowthLastTurn;
+      individualPop.totalWorkforce = Math.floor(individualPop.totalPopulation * individualPop.workforceProportion);
       individualPop.availableWorkforce = individualPop.totalWorkforce - individualPop.usedWorkforce;
 
+      populationTotalInCell.populationGrowthLastTurn += individualPop.populationGrowthLastTurn;
       populationTotalInCell.totalPopulation += individualPop.totalPopulation;
       populationTotalInCell.totalWorkforce += individualPop.totalWorkforce;
       populationTotalInCell.availableWorkforce += individualPop.availableWorkforce;
@@ -526,6 +531,7 @@ function claimCell(cellId, clickedElement) {
       cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].totalWorkforce = 0;
       cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].availableWorkforce = 0;
       cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].usedWorkforce = 0;
+      cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].populationGrowthLastTurn = 0;
     }
   }
 
