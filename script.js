@@ -18,12 +18,20 @@ let currentTurn = 0;
 let playerClaimedCells = [];
 let firstClaimedCell = null; 
 let uniqueBuildingIdIteration = 1;
+const populationTotalTemplate = {
+  totalPopulation: 0,
+  maxPopulation: 0,
+  totalWorkforce: 0,
+  availableWorkforce: 0,
+  usedWorkforce: 0,
+}
 //Keys
 const cellFeaturesBuildingsKey = 'buildings';
 const cellFeaturesCapacityKey = 'storageCapacity';
 const cellFeaturesResourceGenerationKey = 'resourceGenerationLastTurn'; 
 const cellFeaturesResourceConsumptionKey = 'resourceConsumptionLastTurn';
-const cellFeaturesResourcePopulation = 'population';
+const cellFeaturesPopulationKey = 'population';
+const cellFeaturesIndividualPopulationKey = 'individualPopulation';
 //Configs
 const numRows = 15;
 const numCols = 15;
@@ -33,13 +41,30 @@ const raceData = {
     nameSingular: 'Human',
     namePlural: 'Humans',
     workforceProportion: 0.75,
-    defaultProductionRate: 1,
-      'productionRates':{
-        
-      }
-
+    defaultWorkerBaseOutput: 1,
+    defaultWorkerOutputModifier: 1,
+    workerOutputBaseRates:{
+      'Logging Shack': 1,
+    },
+    workerOutputRateModifiers:{
+      'Logging Shack': 1,
+    }
+  },
+  'Wooden Automaton':{
+    nameSingular: 'Wooden Automaton',
+    namePlural: 'Wooden Automatons',
+    workforceProportion: 1,
+    defaultWorkerBaseOutput: 2,
+    defaultWorkerOutputModifier: 1,
+    workerOutputBaseRates:{
+      'Logging Shack': 2,
+    },
+    workerOutputRateModifiers:{
+      'Logging Shack': 1,
+    }
   }
 }
+
 const terrainBuildings = {
   Grass: ['Cabin', 'Farm', 'Hunting Lodge', 'Warehouse'],
   Water: ['Cabin', 'Saltworks', 'Fishing Dock', 'Warehouse'],
@@ -146,7 +171,7 @@ const buildingData = {
     resourcesConsumed: {},
   },
 };
-const resourceTypes = {
+const resourceData = {
 //categoryEconomicSector based on https://en.wikipedia.org/wiki/Economic_sector.
 //categoryGrouping = Grouping certain resources together for easy filtering e.g Wooden Chair in the Furniture category and Wood category.
 //categoryTier = Each level above 1 represents how far down a production chain a resource is e.g Lumber made from Tree Logs = T2.
@@ -316,6 +341,29 @@ function resourceChangePerTurn() {
   }
 }
 
+function populationChangePerTurn() {
+  for (const cellId of playerClaimedCells){
+    const cell = cellFeatures[cellId];
+    const populationTotalInCell = cell[cellFeaturesPopulationKey];
+    console.log(populationTotalInCell)
+    const individualPopsInCell = cell[cellFeaturesIndividualPopulationKey];
+
+    for (const key in individualPopsInCell){
+      individualPop = individualPopsInCell[key]
+      individualPop.totalWorkforce = individualPop.totalPopulation * individualPop.workforceProportion;
+      individualPop.availableWorkforce = individualPop.totalWorkforce - individualPop.usedWorkforce;
+
+      populationTotalInCell.totalPopulation += individualPop.totalPopulation;
+      populationTotalInCell.totalWorkforce += individualPop.totalWorkforce;
+      populationTotalInCell.availableWorkforce += individualPop.availableWorkforce;
+      populationTotalInCell.usedWorkforce += individualPop.usedWorkforce;
+      //Max pop based on buildings and certain terrain features
+      //populationCellTotal.maxPopulation = ;
+    }
+
+  }
+}
+
 function generateBuildingCategoryTabs() {
   let tabContent = '';
   for (const category in buildingCategories) {
@@ -462,18 +510,29 @@ function claimCell(cellId, clickedElement) {
   const claimButton = clickedElement;
   claimButton.disabled = true;
 
-  cellFeatures[cellId][cellFeaturesCapacityKey] = JSON.parse(JSON.stringify(resourceTypes));
-  //Adds amount and capacity to track resource storage
-  for (const key in cellFeatures[cellId][cellFeaturesCapacityKey]) {
-    if (cellFeatures[cellId][cellFeaturesCapacityKey].hasOwnProperty(key)) {
-      cellFeatures[cellId][cellFeaturesCapacityKey][key].amount = 0;
-      cellFeatures[cellId][cellFeaturesCapacityKey][key].capacity = 0;
+  cellFeatures[cellId][cellFeaturesCapacityKey] = JSON.parse(JSON.stringify(resourceData));
+  //Adds amount and capacity properties to track resource storage
+  for (const resource in cellFeatures[cellId][cellFeaturesCapacityKey]) {
+    if (cellFeatures[cellId][cellFeaturesCapacityKey].hasOwnProperty(resource)) {
+      cellFeatures[cellId][cellFeaturesCapacityKey][resource].amount = 0;
+      cellFeatures[cellId][cellFeaturesCapacityKey][resource].capacity = 0;
     }
   }
+  cellFeatures[cellId][cellFeaturesIndividualPopulationKey] = JSON.parse(JSON.stringify(raceData));
+  //Adds properties to track population and workforce
+  for (const key in cellFeatures[cellId][cellFeaturesIndividualPopulationKey]) {
+    if (cellFeatures[cellId][cellFeaturesIndividualPopulationKey].hasOwnProperty(key)) {
+      cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].totalPopulation = 1000;
+      cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].totalWorkforce = 0;
+      cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].availableWorkforce = 0;
+      cellFeatures[cellId][cellFeaturesIndividualPopulationKey][key].usedWorkforce = 0;
+    }
+  }
+
   cellFeatures[cellId][cellFeaturesResourceGenerationKey] = {};
   cellFeatures[cellId][cellFeaturesResourceConsumptionKey] = {};
   cellFeatures[cellId][cellFeaturesBuildingsKey] = [];
-  cellFeatures[cellId][cellFeaturesResourcePopulation] = {};
+  cellFeatures[cellId][cellFeaturesPopulationKey] = JSON.parse(JSON.stringify(populationTotalTemplate));
 
   console.log(`Cell: ${cellId} claimed.`);
   console.log(playerClaimedCells)
@@ -558,8 +617,13 @@ function handleCellClick(event) {
 }
 
 function advanceTurn() {
+  if (firstClaimedCell === null){
+    console.log('Can\'t advance turn without claiming a cell.')
+    return;
+  }
   currentTurn++;
   resourceChangePerTurn()
+  populationChangePerTurn()
   console.log(`Turn: ${currentTurn}`);
   console.log(cellFeatures);
 }
