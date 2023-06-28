@@ -349,6 +349,11 @@ function populationChangePerTurn() {
     const cell = cellFeatures[cellId];
     const populationTotalInCell = cell[cellFeaturesPopulationKey];
     const individualPopsInCell = cell[cellFeaturesIndividualPopulationKey];
+    populationTotalInCell.totalPopulation = 0;
+    populationTotalInCell.usedWorkforce = 0;
+    populationTotalInCell.availableWorkforce = 0;
+    populationTotalInCell.totalWorkforce = 0;
+    populationTotalInCell.populationGrowthLastTurn = 0;
 
     for (const key in individualPopsInCell){
       individualPop = individualPopsInCell[key]
