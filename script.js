@@ -355,8 +355,8 @@ function populationChangePerTurn() {
     populationTotalInCell.totalWorkforce = 0;
     populationTotalInCell.populationGrowthLastTurn = 0;
 
-    for (const key in individualPopsInCell){
-      individualPop = individualPopsInCell[key]
+    for (const pop in individualPopsInCell){
+      individualPop = individualPopsInCell[pop]
       individualPop.populationGrowthLastTurn = Math.floor(individualPop.populationGrowth * individualPop.totalPopulation);
       individualPop.totalPopulation += individualPop.populationGrowthLastTurn;
       individualPop.totalWorkforce = Math.floor(individualPop.totalPopulation * individualPop.workforceProportion);
@@ -370,7 +370,6 @@ function populationChangePerTurn() {
       //Max pop based on buildings and certain terrain features
       //populationCellTotal.maxPopulation = ;
     }
-
   }
 }
 
