@@ -41,22 +41,35 @@ table {
   justify-content: center;
   align-items: center;
 }
+#building-category-tab-container{
+  border: 3px solid rgb(57,73,101);
+  margin-bottom:5px;
+}
 .building-category-tab{
   padding: 7px 10px;
-  margin: 5px;
   font-size: 1.3rem;
+  background-color: rgb(128,148,183);
+  color:white;
+  transition-duration: 0.3s;
+}
+.building-category-tab:hover{
+  background-color: rgb(57,73,101);
 }
 .building-btn{
-  transition-duration: 0.4s;
+  transition-duration: 0.3s;
   padding: 10px;
   margin: 5px;
   font-size: 0.8rem;
-  border-radius: 15px;
+  border-radius: 5px;
+  background-color: rgb(128,148,183);
+  color:white;
   border: none;
+  border-radius: 10px 100px / 120px;
+
 }
 .building-btn:hover {
-  background-color: rgb(93, 91, 91);
-  color: white;
+  background-color: rgb(57,73,101);
+
 }
 #advance-turn, .claim-cell-btn{
   margin: 10px;
@@ -67,4 +80,11 @@ table {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+#building-menu{
+  background-color: rgb(85, 108, 150);
+  padding:3px;
+  border: 4px groove rgb(128,148,183);
+  border-radius:5px; 
+
 }

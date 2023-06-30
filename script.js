@@ -620,7 +620,6 @@ function handleCellClick(event) {
     constructBuilding(selectedCellId, buildingName)
 
   } else if (clickedElement.classList.contains('claim-cell-btn')) {
-      //Handle claim button 
       claimCell(selectedCellId, clickedElement);
     }
 
