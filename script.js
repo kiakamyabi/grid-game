@@ -9,7 +9,7 @@
 const gameWorld = document.getElementById('game-grid')
 const districtMenu = document.getElementById('district-menu')
 const unclaimedCellMenu = document.getElementById('unclaimed-cell-menu')
-const table = document.createElement('table');
+const root = document.documentElement;
 const cellFeatures = {};
 let selectedCellId = null;
 let currentTurn = 0;
@@ -33,8 +33,8 @@ const cellFeaturesResourceConsumptionKey = 'resourceConsumptionLastTurn';
 const cellFeaturesPopulationKey = 'population';
 const cellFeaturesIndividualPopulationKey = 'individualPopulation';
 //Configs
-const numRows = 16;
-const numCols = 16;
+const numRows = 25;
+const numCols = 25;
 
 const raceData = {
   'Human':{
@@ -197,15 +197,13 @@ const resourceData = {
 
 function worldGeneration(){
 for (let row = 0; row < numRows; row++) {
-    const newRow = document.createElement('tr');
     for (let col = 0; col < numCols; col++) {
-      const individualCell = document.createElement('td');
+      const individualCell = document.createElement('div');
       individualCell.classList.add('grid-cell');
       //Plus one to the id because the count starts at zero
       rowPlus = row + 1;
       colPlus = col + 1;
       individualCell.id = `cell-${rowPlus}-${colPlus}`;
-      newRow.appendChild(individualCell);
 
       const terrainType = generateTerrain();
       cellFeatures[individualCell.id] = {
@@ -213,10 +211,11 @@ for (let row = 0; row < numRows; row++) {
       };
 
       individualCell.setAttribute('data-terrain', terrainType);
+      gameWorld.appendChild(individualCell);
     }
-    table.appendChild(newRow);
   }
-  gameWorld.appendChild(table);
+  root.style.setProperty('--num-rows', numRows);
+  root.style.setProperty('--num-cols', numCols);
 }
 
 function generateTerrain() {
