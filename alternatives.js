@@ -20,3 +20,6 @@ function populationChangePerTurn() {
       populationTotalInCell.usedWorkforce = Object.values(individualPopsInCell).reduce((sum, individualPop) => sum + individualPop.usedWorkforce, 0);
     }
 }
+
+//in populationChangePerTurn() can use this instead but it is basically the same peformance.
+individualPop.populationMortalityLastTurn = Math.floor(individualPop.populationMortality * individualPop.totalPopulation) || 1;

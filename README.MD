@@ -18,7 +18,7 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - [x] Building construction cost <br>
 - [x] Building resource output <br>
 - [x] Building resource input <br>
-- [x] Building construction time <br>
+- [ ] Building construction time <br>
 - [x] Unique buildings for terrain types <br>
 - [ ] Building UI with description <br>
 - [x] Building storage capacity <br>
@@ -28,16 +28,18 @@ The current objective is to make a playable game with mildly indepth mechanics r
 - [ ] Building priority system settings for the player INGAME<br>
 
 ### Industry <br>
-- [ ] Modifers to effect resource generation <br>
-- [ ] Modifers to effect resource consumption <br>
-- [ ] Modifers to effect resource construction time <br>
+- [X] Modifers to effect resource generation <br>
+- [X] Modifers to effect resource consumption <br>
+- [X] Modifers to effect resource construction time <br>
 - [ ] Modifers to effect resource storage <br>
 
 ### Population <br>
-- [ ] Add it! <br>
-- [ ] Different population types <br>
-
-
+- [X] Different races <br>
+- [X] Population growth <br>
+- [X] Workforce reflected based on IRL statistics<br>
+- [X] Worker output differences between races<br>
+- [X] Population mortality<br>
+- [X] Individual population types tracked per cell <br>
 
 # Current features <br>
 ## World Generation <br>

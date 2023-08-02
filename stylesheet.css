@@ -36,38 +36,38 @@ table {
   top: 20px;
   right: 20px;
 }
-.building-tab{
+.district-tab{
   display: flex;
   justify-content: center;
   align-items: center;
 }
-#building-category-tab-container{
+#district-category-tab-container{
   border: 3px solid rgb(57,73,101);
   margin-bottom:5px;
 }
-.building-category-tab{
+.district-category-tab{
   padding: 7px 10px;
   font-size: 1.3rem;
-  background-color: rgb(128,148,183);
+  background-color: rgb(112,134,174);
   color:white;
   transition-duration: 0.3s;
 }
-.building-category-tab:hover{
+.district-category-tab:hover{
   background-color: rgb(57,73,101);
 }
-.building-btn{
+.district-btn{
   transition-duration: 0.3s;
   padding: 10px;
   margin: 5px;
   font-size: 0.8rem;
   border-radius: 5px;
-  background-color: rgb(128,148,183);
+  background-color: rgb(112,134,174);
   color:white;
   border: none;
   border-radius: 10px 100px / 120px;
 
 }
-.building-btn:hover {
+.district-btn:hover {
   background-color: rgb(57,73,101);
 
 }
@@ -81,7 +81,7 @@ table {
   justify-content: center;
   align-items: center;
 }
-#building-menu{
+#district-menu{
   background-color: rgb(85, 108, 150);
   padding:3px;
   border: 4px groove rgb(128,148,183);
