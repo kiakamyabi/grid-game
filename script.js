@@ -37,6 +37,11 @@ const numRows = 25;
 const numCols = 25;
 
 const raceData = {
+  //defaultWorkerBaseOutput =
+  //workerOutputRateModifiers =
+  //workerOutputBaseRates = 
+  //workerOutputRateModifiers =
+
   'Human':{
     nameSingular: 'Human',
     namePlural: 'Humans',
@@ -78,10 +83,29 @@ const districtCategories = {
   'Other': {
     name: 'Other'
   },
+  'Placeholder1': {
+    name: 'Placeholder1'
+  },
+  'Placeholder2': {
+    name: 'Placeholder2'
+  },
+  'Placeholder3': {
+    name: 'Placeholder3'
+  },
+  'Placeholder4': {
+    name: 'Placeholder4'
+  },
+  'Placeholder5': {
+    name: 'Placeholder5'
+  },
+  'Placeholder6': {
+    name: 'Placeholder6'
+  },
 };
 const districtData = {
   //resourcesGenerated = The resources that the district will generate per turn, meant to broadly represent output.
   //resourcesConsumed = The resources that the district will consume per turn, meant to broadly represent input.
+  //unlockStatus = If the district is available to construct.
   /*turnPriority = The priority a district will have in the end of turn calculations. Lower number = higher priority. For resource generation
   and consumption, issues can arise if districts are not in the correct order of priority. For example a Lumber Mill will need 1 Tree Log as
   an input to generate Lumber. If there is no Tree Logs in storage the Lumber Mill cannot function. If there is a Logging Shack to generate
@@ -89,25 +113,117 @@ const districtData = {
   THEN the Logging Shack will produce the Tree Log, putting it into storage for next turn. Therefore the Logging Shack must have higher priority
   for the Lumber Mill to operate on the same turn.*/
   //capacityIncrease = Storage capacity increase for a resource.
-  //resourcesRequired = The cost to construct a district.
+  //workforceDefault = The workforce maximum by default.
+  //upgradesAvailable = Object that holds data of district upgrades.
+  /*productionRateTarget = The amount of production rate that is it takes to generate/consume resources. Example..
+
+  'Example District': {
+    name: 'Example District',
+    productionRateTarget: 100,
+    resourcesGenerated: {
+      'Resource1':100,
+      'Resource2':77,
+    },
+    resourcesConsumed: {
+      'Resource3':200,
+      'Resource4':73,
+    },
+  }
+  Production Rate Produced / Production Rate Target. Result rounded down if generating resource, rounded up if consuming resource.
+  Assuming 250 Production Rate is produced.
+  250 (Production Rate Produced) / 100 (Production Rate Target) = 2.5 (Multiplier)
+  Resources Generated:
+    Resource1: 250
+      100 (Resource1) x 2.5 (Multiplier) = 250
+    Resource2: 192
+      77 (Resource2) x 2.5 (Multiplier) = 192.5. Rounded down to 192.
+  Resources Consumed:
+    Resource3: 500
+      200 (Resource3) x 2.5 (Multiplier) = 500
+    Resource4: 183
+      73 (Resource4) x 2.5 (Multiplier) = 182.5. Rounded up to 183.
+  */
+
   'Warehouse': {
     name: 'Warehouse',
     category: 'Other',
+    unlockStatus: false,
     buildableOnTerrain:['Grass', 'Water', 'Mountain', 'Forest'],
     resourcesGenerated: {},
     resourcesConsumed: {},
-    workforceDefault:0,
+    workforceDefault: 0,
     capacityIncrease: {
       'Tree Logs': 500,
       'Lumber': 500
     },
-    resourcesRequired: {
-      'Lumber': 1
-    }
   },
+
+  'Placeholder District 1': {
+    name: 'Placeholder District 1',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 2': {
+    name: 'Placeholder District 2',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 3': {
+    name: 'Placeholder District 3',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 4': {
+    name: 'Placeholder District 4',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 5': {
+    name: 'Placeholder District 5',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 7': {
+    name: 'Placeholder District 7',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 6': {
+    name: 'Placeholder District 6',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 8': {
+    name: 'Placeholder District 8',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 9': {
+    name: 'Placeholder District 9',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 10': {
+    name: 'Placeholder District 10',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 11': {
+    name: 'Placeholder District 11',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+  'Placeholder District 12': {
+    name: 'Placeholder District 12',
+    category: 'Production',
+    buildableOnTerrain:['Forest'],
+  },
+
+
   'Logging District': {
     name: 'Logging District',
     category: 'Extraction',
+    unlockStatus: false,
     professionName:'Lumberjack',
     professionNamePlural:'Lumberjacks',
     turnPriority: 1,
@@ -121,6 +237,47 @@ const districtData = {
     capacityIncrease: {
       'Tree Logs': 50,
     },
+    constructionCost: {
+      constructionTimer: 1,
+      'Stone': 1
+    },
+    upgradesAvailable:{
+      'Toolsheds':{
+        name:'Toolsheds',
+        unlockStatus: false,
+        baseProductionRateMultiplier: 1,
+        upgradeProductionRateMultiplier: 1,
+        workersUpgraded: 100,
+        resourcesGeneratedFromUpgrade:{
+        },
+        resourcesConsumedFromUpgrade:{
+        }
+      },
+      'Heavy Machines':{
+        name:'Heavy Machines',
+        unlocked: false,
+        baseProductionRateMultiplier: 2,
+        upgradeProductionRateMultiplier: 1,
+        workersUpgraded: 100,
+        resourcesGeneratedFromUpgrade:{
+        },
+        resourcesConsumedFromUpgrade:{
+        }
+      },
+      'Bark Extract':{
+        name:'Bark Extract',
+        unlocked: false,
+        baseProductionRateMultiplier: 0,
+        upgradeProductionRateMultiplier: 1,
+        workersUpgraded: 100,
+        resourcesGeneratedFromUpgrade:{
+          'Bark': 50,
+        },
+        resourcesConsumedFromUpgrade:{
+        }
+      },
+
+    }
   },
 
   'Lumber District': {
@@ -137,7 +294,7 @@ const districtData = {
       'Sawdust': 200,
     },
     resourcesConsumed: {
-      'Tree Logs': 50,
+      'Tree Logs': 100,
     },
     capacityIncrease: {
       'Lumber': 100,
@@ -192,6 +349,18 @@ const resourceData = {
     categoryEconomicSector: 'Secondary',
     categoryGrouping: ['Wood'],
     categoryTier: '2'
+  },
+  'Bark': {
+    name: 'Bark',
+    categoryEconomicSector: 'Primary',
+    categoryGrouping: ['Wood'],
+    categoryTier: '1'
+  },
+  'Stone': {
+    name: 'Stone',
+    categoryEconomicSector: 'Primary',
+    categoryGrouping: ['Stone'],
+    categoryTier: '1'
   },
 };
 
@@ -513,7 +682,7 @@ function generateUnclaimedCellMenuContent() {
 
 function showDistrictTabs(category) {
   const districtTabContainerId = document.getElementById('district-tab-container');
-  districtTabContainerId.style.display = 'block';
+  districtTabContainerId.style.display = 'flex';
 
   const districtTabs = document.querySelectorAll('.district-tab');
   districtTabs.forEach((tab) => {

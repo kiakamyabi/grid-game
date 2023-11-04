@@ -36,21 +36,35 @@
 }
 #menu-container{
   position: fixed;
-  top: 20px;
-  right: 20px;
+  width: 45vw;
+  max-width: 45vw;
+  height:60vh;
+  top: 10vh;
+  right: 2vw;
 }
-.district-tab{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#district-menu{
+  height: 100%;
+  background-color: rgb(85, 108, 150);
+  padding: 3px;
+  border: 4px groove rgb(128,148,183);
+  border-radius: 5px; 
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 #district-category-tab-container{
+  display: flex;
+  scroll-snap-type: inline mandatory;
+  overflow-x: scroll;
+  overflow-y: scroll;
   border: 3px solid rgb(57,73,101);
-  margin-bottom:5px;
+  margin-bottom: 5px;
+  
 }
 .district-category-tab{
   padding: 7px 10px;
-  font-size: 1.3rem;
+  flex: auto;
+  scroll-snap-align: start;
+  font-size: clamp(0.9rem, 2vw + 0.4rem, 1.2rem);
   background-color: rgb(112,134,174);
   color:white;
   transition-duration: 0.3s;
@@ -58,11 +72,25 @@
 .district-category-tab:hover{
   background-color: rgb(57,73,101);
 }
+#district-tab-container{
+  display: flex;
+  justify-content: center;
+}
+.district-tab{
+  display: flex;
+  justify-content: center;
+  align-content: start;
+  flex-wrap: wrap;
+  overflow: auto;
+}
 .district-btn{
+  max-width: 200px;
+  max-height: 100px;
+  flex: 1;
   transition-duration: 0.3s;
-  padding: 10px;
+  padding: 7px;
   margin: 5px;
-  font-size: 0.8rem;
+  font-size: clamp(0.2rem, 1vw + 0.4rem, 0.8rem);
   border-radius: 5px;
   background-color: rgb(112,134,174);
   color:white;
@@ -77,17 +105,10 @@
 #advance-turn, .claim-cell-btn{
   margin: 10px;
   padding: 5px;
-  font-size: 1.3rem;
+  font-size: 0.8rem;
 }
 #advance-turn-container, #unclaimed-cell-menu{
   display: flex;
   justify-content: center;
   align-items: center;
-}
-#district-menu{
-  background-color: rgb(85, 108, 150);
-  padding:3px;
-  border: 4px groove rgb(128,148,183);
-  border-radius:5px; 
-
 }
