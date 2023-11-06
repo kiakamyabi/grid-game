@@ -5,17 +5,23 @@
 //Make special menu for when the player is claiming the first cell, like settling turn 1 for Civ
 //Add a way for players to interact with the district priority system.
 
+//UI id/class
+const districtMenuId = 'district-menu';
+const districtCategoryScrollbarId = 'district-menu__category-scrollbar';
+const districtCategoryBtnCls = 'district-menu__category-btn';
+
+
 //Data
-const gameWorld = document.getElementById('game-grid')
-const districtMenu = document.getElementById('district-menu')
-const unclaimedCellMenu = document.getElementById('unclaimed-cell-menu')
+const unclaimedCellMenu = document.getElementById('unclaimed-cell-menu');
+const districtMenu = document.getElementById(districtMenuId);
+const gameWorld = document.getElementById('game-grid');
 const root = document.documentElement;
-const cellFeatures = {};
 let selectedCellId = null;
 let currentTurn = 0;
 let playerClaimedCells = [];
 let firstClaimedCell = null; 
 let uniqueDistrictIdIteration = 1;
+//Templates
 const populationTotalTemplate = {
   totalPopulation: 0,
   maxPopulation: 0,
@@ -24,7 +30,8 @@ const populationTotalTemplate = {
   usedWorkforce: 0,
   populationGrowthLastTurn: 0,
   populationMortalityLastTurn: 0,
-}
+};
+const cellFeatures = {};
 //Keys
 const cellFeaturesDistrictsKey = 'districts';
 const cellFeaturesCapacityKey = 'storageCapacity';
@@ -72,8 +79,8 @@ const raceData = {
       'Logging Shack': 1,
     }
   }
-}
-const districtCategories = {
+};
+const districtCategoriesData = {
   'Extraction': {
     name: 'Extraction'
   },
@@ -385,14 +392,14 @@ for (let row = 0; row < numRows; row++) {
   }
   root.style.setProperty('--num-rows', numRows);
   root.style.setProperty('--num-cols', numCols);
-}
+};
 
 function generateTerrain() {
   const terrainTypes = ['Grass', 'Water', 'Mountain', 'Forest'];
   //Generates terrain randomly
   const randomIndex = Math.floor(Math.random() * terrainTypes.length);
   return terrainTypes[randomIndex];
-}
+};
 
 function handleStorageCapacityIncrease(cellId, districtInfo) {
   const cell = cellFeatures[cellId];
@@ -412,100 +419,7 @@ function handleStorageCapacityIncrease(cellId, districtInfo) {
       }
     }
   }
-}
-
-// function resourceChangePerTurn() {
-//   //Loop through all cells
-//   for (const cellId of playerClaimedCells) {
-//     console.log(cellId)
-//     const cell = cellFeatures[cellId];
-//     const buildings = cell[cellFeaturesBuildingsKey];
-//     const totalResourceGenerationLastTurn = {};
-//     const totalResourceConsumptionLastTurn = {};
-
-//     //Sort buildings based on priority. Lower = higher priority.
-//     buildings.sort((a, b) => {
-//       return buildingData[a.name].turnPriority - buildingData[b.name].turnPriority;
-//     });
-
-
-//     //Loop through buildings in the cell
-//     for (const building of buildings) {
-//       const buildingInfo = buildingData[building.name]
-
-//       //Check if building is under construction and reduce construction timer
-//       if (building.constructionTime > 0) {
-//         building.constructionTime--;
-//         console.log(`${building.name}. Construction timer: ${building.constructionTime}`)
-
-//         //Skip resource generation/consumption for buildings under construction
-//         continue;
-//       }
-
-//       //Check if building has required resources to be consumed in storage
-//       let resourcesToBeConsumedAvailable = true;
-
-//       for (const resource in buildingInfo.resourcesConsumed) {
-//         const requiredAmount = buildingInfo.resourcesConsumed[resource];
-
-//         if (cell[cellFeaturesCapacityKey][resource]) {
-//           const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
-
-//           if (currentAmount < requiredAmount) {
-//             resourcesToBeConsumedAvailable = false;
-//             break; 
-//           }
-//         } else {
-//           resourcesToBeConsumedAvailable = false;
-//           break; 
-//         }
-//       }
-
-//       if (resourcesToBeConsumedAvailable) {
-//         //Resource consumption
-//         for (const resource in buildingInfo.resourcesConsumed) {
-//           const consumedAmount = buildingInfo.resourcesConsumed[resource];
-//           cell[cellFeaturesCapacityKey][resource].amount -= consumedAmount;
-
-//           //Tracks resource consumption by putting it in a placeholder to be put in cellFeatures
-//           if (totalResourceConsumptionLastTurn[resource]) {
-//             totalResourceConsumptionLastTurn[resource] += consumedAmount;
-//           } else {
-//             totalResourceConsumptionLastTurn[resource] = consumedAmount;
-//           }
-//         }
-
-//         //Resource generation
-//         for (const resource in buildingInfo.resourcesGenerated) {
-//           const generatedAmount = buildingInfo.resourcesGenerated[resource];
-
-//          //Checks for resource capacity
-//          if (cell[cellFeaturesCapacityKey][resource]) {
-//           const currentAmount = cell[cellFeaturesCapacityKey][resource].amount;
-//           const storageCapacity = cell[cellFeaturesCapacityKey][resource].capacity;
-//           //Uses Math.min to not go over the storage limit
-//           if (currentAmount < storageCapacity) {
-//             const remainingCapacity = storageCapacity - currentAmount;
-//             const generatedAmountFinal = Math.min(generatedAmount, remainingCapacity);
-//             cell[cellFeaturesCapacityKey][resource].amount += generatedAmountFinal;
-//           }
-//         }
-
-//           //Tracks resource generation by putting it in a placeholder to be put in cellFeatures
-//           if (totalResourceGenerationLastTurn[resource]) {
-//             totalResourceGenerationLastTurn[resource] += generatedAmount;
-//           } else {
-//             totalResourceGenerationLastTurn[resource] = generatedAmount;
-//           }
-//         }
-
-//       }
-//     }
-//     //Updates cellFeature for resource generation & consumption, using placeholders.
-//     cell[cellFeaturesResourceGenerationKey] = totalResourceGenerationLastTurn;
-//     cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumptionLastTurn;
-//   }
-// }
+};
 
 function resourceChangePerTurn() {
   //Loop through all cells
@@ -588,7 +502,7 @@ function resourceChangePerTurn() {
     cell[cellFeaturesResourceGenerationKey] = totalResourceGenerationLastTurn;
     cell[cellFeaturesResourceConsumptionKey] = totalResourceConsumptionLastTurn;
   }
-}
+};
 
 function populationChangePerTurn() {
   for (const cellId of playerClaimedCells){
@@ -621,20 +535,20 @@ function populationChangePerTurn() {
       //populationCellTotal.maxPopulation = ;
     }
   }
-}
+};
 
 function generateDistrictCategoryTabs() {
   let tabContent = '';
-  for (const category in districtCategories) {
-    const categoryName = districtCategories[category].name;
-    tabContent += `<button class="district-category-tab" data-category="${category}">${categoryName}</button>`;
+  for (const category in districtCategoriesData) {
+    const categoryName = districtCategoriesData[category].name;
+    tabContent += `<button class="${districtCategoryBtnCls}" data-category="${category}">${categoryName}</button>`;
   }
   return tabContent;
 }
 
 function generateDistrictMenu(terrainType) {
   let districtMenuContent = '';
-  for (const category in districtCategories) {
+  for (const category in districtCategoriesData) {
     const districts = Object.values(districtData)
       .filter((district) => district.category === category && district.buildableOnTerrain.includes(terrainType));
 
@@ -651,7 +565,7 @@ function generateDistrictMenu(terrainType) {
 
 function generateClaimedCellMenuContent(terrainType) {
   const menuContent = 
-  `<div id="district-category-tab-container">
+  `<div id="${districtCategoryScrollbarId}">
     ${generateDistrictCategoryTabs()}
     </div>
 
@@ -700,19 +614,18 @@ function openClaimedCellMenu(cellId) {
   const terrainType = selectedCell.terrainType;
   const menuContent = generateClaimedCellMenuContent(terrainType);
   //Update menu
-  const menuContentContainer = document.getElementById('district-menu');
-  menuContentContainer.innerHTML = menuContent;
+  districtMenu.innerHTML = menuContent;
   //Show menu
-  menuContentContainer.style.display = 'block';
+  districtMenu.style.display = 'block';
   //Hide district buttons to show later
   const districtTabContainerId = document.getElementById('district-tab-container');
   districtTabContainerId.style.display = 'none';
 
   //Event listener for tabs.
-  const tabContainer = document.getElementById('district-category-tab-container');
+  const tabContainer = document.getElementById(districtCategoryScrollbarId);
   tabContainer.addEventListener('click', (event) => {
     const target = event.target;
-    if (target.classList.contains('district-category-tab')) {
+    if (target.classList.contains(districtCategoryBtnCls)) {
       const category = target.getAttribute('data-category');
       showDistrictTabs(category);
     }
