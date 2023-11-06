@@ -9,11 +9,15 @@
 const districtMenuId = 'district-menu';
 const districtCategoryScrollbarId = 'district-menu__category-scrollbar';
 const districtCategoryBtnCls = 'district-menu__category-btn';
+const districtSelectorContainerId = 'district-menu__selector-container';
+const districtSelectorId = 'district-menu__selector';
+const districtBtnCls = 'district-menu__district-btn';
+
 
 
 //Data
-const unclaimedCellMenu = document.getElementById('unclaimed-cell-menu');
 const districtMenu = document.getElementById(districtMenuId);
+const unclaimedCellMenu = document.getElementById('unclaimed-cell-menu');
 const gameWorld = document.getElementById('game-grid');
 const root = document.documentElement;
 let selectedCellId = null;
@@ -553,9 +557,9 @@ function generateDistrictMenu(terrainType) {
       .filter((district) => district.category === category && district.buildableOnTerrain.includes(terrainType));
 
     if (districts.length > 0) {
-      districtMenuContent += `<div class="district-tab" data-category="${category}">`;
+      districtMenuContent += `<div class="${districtSelectorId}" data-category="${category}">`;
       for (const district of districts) {
-        districtMenuContent += `<button class="district-btn" data-district="${district.name}">${district.name}</button>`;
+        districtMenuContent += `<button class="${districtBtnCls}" data-district="${district.name}">${district.name}</button>`;
       }
       districtMenuContent += `</div>`;
     }
@@ -569,7 +573,7 @@ function generateClaimedCellMenuContent(terrainType) {
     ${generateDistrictCategoryTabs()}
     </div>
 
-  <div id="district-tab-container">
+  <div id="${districtSelectorContainerId}">
     ${generateDistrictMenu(terrainType)}
   </div>`;
 
@@ -595,10 +599,10 @@ function generateUnclaimedCellMenuContent() {
 }
 
 function showDistrictTabs(category) {
-  const districtTabContainerId = document.getElementById('district-tab-container');
+  const districtTabContainerId = document.getElementById(districtSelectorContainerId);
   districtTabContainerId.style.display = 'flex';
 
-  const districtTabs = document.querySelectorAll('.district-tab');
+  const districtTabs = document.querySelectorAll(`.${districtSelectorId}`);
   districtTabs.forEach((tab) => {
     const districtTabCategory = tab.getAttribute('data-category');
     if (districtTabCategory === category) {
@@ -618,7 +622,7 @@ function openClaimedCellMenu(cellId) {
   //Show menu
   districtMenu.style.display = 'block';
   //Hide district buttons to show later
-  const districtTabContainerId = document.getElementById('district-tab-container');
+  const districtTabContainerId = document.getElementById(districtSelectorContainerId);
   districtTabContainerId.style.display = 'none';
 
   //Event listener for tabs.
@@ -811,7 +815,7 @@ function handleCellClick(event) {
     }
 
     
-  } else if (clickedElement.classList.contains('district-btn')) {
+  } else if (clickedElement.classList.contains(`${districtBtnCls}`)) {
     const districtName = clickedElement.getAttribute('data-district');
 
     constructDistrict(selectedCellId, districtName)

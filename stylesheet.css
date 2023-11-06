@@ -71,17 +71,17 @@
 .district-menu__category-btn:hover{
   background-color: rgb(57,73,101);
 }
-#district-tab-container{
+#district-menu__selector-container{
   display: flex;
   justify-content: center;
 }
-.district-tab{
+.district-menu__selector{
   display: flex;
   justify-content: center;
   align-content: start;
   flex-wrap: wrap;
 }
-.district-btn{
+.district-menu__district-btn{
   max-width: 200px;
   max-height: 100px;
   flex: 1;
@@ -96,7 +96,7 @@
   border-radius: 10px 100px / 120px;
 
 }
-.district-btn:hover {
+.district-menu__district-btn:hover {
   background-color: rgb(57,73,101);
 
 }
