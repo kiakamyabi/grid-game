@@ -646,7 +646,7 @@ function openUnclaimedCellMenu(){
 }
 
 function getAdjacentCells(cellId) {
-  const cellIdParts = cellId.split('-', 2);
+  const cellIdParts = cellId.split('-');
   const row = parseInt(cellIdParts[1]);
   const col = parseInt(cellIdParts[2]);
   const adjacentCells = [];
@@ -793,6 +793,7 @@ function handleCellClick(event) {
     //Hides menus to stop overlap
     unclaimedCellMenu.style.display = 'none';
     districtMenu.style.display = 'none';
+    console.log('Current Cell:', selectedCellId);
 
     if (playerClaimedCells.includes(cellId) ) {
       openClaimedCellMenu(cellId);
