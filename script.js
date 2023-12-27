@@ -380,7 +380,7 @@ for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
       const individualCell = document.createElement('div');
       individualCell.classList.add('grid-cell');
-      //Plus one to the id because the count starts at zero
+      //Plus one to the id because otherwise the count starts at zero
       rowPlus = row + 1;
       colPlus = col + 1;
       individualCell.id = `cell-${rowPlus}-${colPlus}`;
@@ -646,7 +646,7 @@ function openUnclaimedCellMenu(){
 }
 
 function getAdjacentCells(cellId) {
-  const cellIdParts = cellId.split('-');
+  const cellIdParts = cellId.split('-', 2);
   const row = parseInt(cellIdParts[1]);
   const col = parseInt(cellIdParts[2]);
   const adjacentCells = [];
