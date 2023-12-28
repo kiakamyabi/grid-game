@@ -46,6 +46,7 @@ const cellFeaturesIndividualPopulationKey = 'individualPopulation';
 //Configs
 const numRows = 25;
 const numCols = 25;
+const cellSize = 59;
 
 const raceData = {
   //defaultWorkerBaseOutput =
@@ -375,27 +376,39 @@ const resourceData = {
   },
 };
 
-function worldGeneration(){
-for (let row = 0; row < numRows; row++) {
-    for (let col = 0; col < numCols; col++) {
+function worldGeneration(rows, cols){
+for (let q = 0; q < rows; q++) {
+    for (let r = 0; r < cols; r++) {
+      //Creates individual cell as a div
       const individualCell = document.createElement('div');
+      //Adds class to each cell
       individualCell.classList.add('grid-cell');
-      //Plus one to the id because otherwise the count starts at zero
-      rowPlus = row + 1;
-      colPlus = col + 1;
-      individualCell.id = `cell-${rowPlus}-${colPlus}`;
+      //Adds id to each cell
+      individualCell.id = `cell-${q}-${r}`;
 
+      //Calculate hexagon cell position based on q (row) and r (column) coordinates
+      const y = q * 1.5 * cellSize;
+      const x =
+      r * (Math.sqrt(3) * cellSize) + (q % 2) * (Math.sqrt(3) / 2) * cellSize;
+
+      //Set hexagon cell position using CSS
+      individualCell.style.left = `${x}px`;
+      individualCell.style.top = `${y}px`;
+
+      //Generates terrain and adds default cell features
       const terrainType = generateTerrain();
       cellFeatures[individualCell.id] = {
         terrainType,
       };
 
+      //Adds attribute for terrain to each cell, used in CSS for colouring
       individualCell.setAttribute('data-terrain', terrainType);
+      //Adds cell to grid
       gameWorld.appendChild(individualCell);
     }
   }
-  root.style.setProperty('--num-rows', numRows);
-  root.style.setProperty('--num-cols', numCols);
+  root.style.setProperty('--num-rows', rows);
+  root.style.setProperty('--num-cols', cols);
 };
 
 function generateTerrain() {
@@ -840,7 +853,7 @@ function advanceTurn() {
 }
 
 //Initialized on load temporary until game start screen is made
-worldGeneration()
+worldGeneration(numRows, numCols)
 
 gameWorld.addEventListener('click', handleCellClick);
 districtMenu.addEventListener('click', handleCellClick);
