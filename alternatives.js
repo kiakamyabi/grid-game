@@ -41,3 +41,27 @@ function getAdjacentCells(cellId) {
   }
   return adjacentCells;
 }
+
+//Old square grid world gen
+function worldGeneration(){
+  for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
+        const individualCell = document.createElement('div');
+        individualCell.classList.add('grid-cell');
+        //Plus one to the id because otherwise the count starts at zero
+        rowPlus = row + 1;
+        colPlus = col + 1;
+        individualCell.id = `cell-${rowPlus}-${colPlus}`;
+  
+        const terrainType = generateTerrain();
+        cellFeatures[individualCell.id] = {
+          terrainType,
+        };
+  
+        individualCell.setAttribute('data-terrain', terrainType);
+        gameWorld.appendChild(individualCell);
+      }
+    }
+    root.style.setProperty('--num-rows', numRows);
+    root.style.setProperty('--num-cols', numCols);
+  };
