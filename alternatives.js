@@ -65,3 +65,33 @@ function worldGeneration(){
     root.style.setProperty('--num-rows', numRows);
     root.style.setProperty('--num-cols', numCols);
   };
+
+  [data-terrain="Grass"],[data-terrain="Water"],[data-terrain="Mountain"], [data-terrain="Forest"]{
+    background-color: black;
+  }
+  
+  //CSS used to make a black border. Uses pseudo element of hexagon to be inside main hexagon to create a border effect.
+  [data-terrain="Grass"]::before, [data-terrain="Water"]::before, [data-terrain="Mountain"]::before, [data-terrain="Forest"]::before{
+    position: absolute;
+    content: '';
+    top: 2px;  
+    left: 2px;  
+    height: calc(100% - 4px);  
+    width: calc(100% - 4px);  
+    clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
+  }
+  [data-terrain="Grass"]::before {
+    background-color: #8bc34a;
+  }
+  
+  [data-terrain="Water"]::before {
+      background-color: #2196f3;
+  }
+    
+  [data-terrain="Mountain"]::before {
+      background-color: #9e9e9e; 
+  }
+    
+  [data-terrain="Forest"]::before {
+      background-color: #4caf50;
+  }

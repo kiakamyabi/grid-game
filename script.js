@@ -46,7 +46,7 @@ const cellFeaturesIndividualPopulationKey = 'individualPopulation';
 //Configs
 const numRows = 25;
 const numCols = 25;
-const cellSize = 59.5;
+const cellSize = 51;
 
 const raceData = {
   //defaultWorkerBaseOutput =

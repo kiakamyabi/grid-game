@@ -12,8 +12,8 @@
 }
 .grid-cell {
   position: absolute;
-  width: 100px;
-  height: 115px;
+  width: 86.60254px;
+  height: 100px;
   box-sizing: border-box;
   clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
 }
@@ -26,10 +26,11 @@
 [data-terrain="Grass"]::before, [data-terrain="Water"]::before, [data-terrain="Mountain"]::before, [data-terrain="Forest"]::before{
   position: absolute;
   content: '';
-  top: 2px;  
-  left: 2px;  
-  height: calc(100% - 4px);  
-  width: calc(100% - 4px);  
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 95%; 
+  width: 95%; 
   clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
 }
 [data-terrain="Grass"]::before {
@@ -48,7 +49,18 @@
     background-color: #4caf50;
 }
 .claimed{
-    border: 9px outset rgb(240, 174, 20); 
+    background-color: rgb(240, 174, 20);
+    /* background-color: rgb(240, 174, 20); */
+}
+.claimed::before{
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80%; 
+  width: 80%; 
+  clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
 }
 #menu-container{
   position: fixed;
