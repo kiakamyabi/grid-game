@@ -43,7 +43,7 @@ The current objective is to make a playable game with mildly indepth mechanics r
 
 # Current features <br>
 ## World Generation <br>
-- Square based grid generated to represent a 'world map' that can dynamically be made smaller or bigger <br>
+- Hexagon grid generated to represent a 'world map' that can dynamically be made smaller or bigger <br>
 - Currently based on random gen, will use perlin noise when complete <br>
 - Terrain types e.g Grassland, Forest etc <br>
 
@@ -117,7 +117,7 @@ Marshmellow Hills: ['Example Building']} <br>
 This will allow Example Building to be built in both Grass and Marshmellow Hills type terrain. <br>
 
 ### Change colour of cells with different terrain types <br/>
-If you want to change the colour of cells with specific terrain types you must go to the stylesheet.css and change it there. <br>
+If you want to change the colour of cells with specific terrain types you go to the stylesheet.css and change it there. <br>
 
 >[data-terrain="Grass"] {background-color: #8bc34a;} <br>
 
