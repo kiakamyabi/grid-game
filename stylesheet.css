@@ -1,20 +1,22 @@
 :root {
   --num-rows: 0;
   --num-cols: 0;
-  --cell-size: 100px;
+  /* --cell-size: 100px; */
 
 }
 #game-grid {
-  display: grid;
-  grid-template-columns: repeat(var(--num-cols), var(--cell-size));
-  grid-template-rows: repeat(var(--num-rows), var(--cell-size));
-  overflow: auto;
+  /* display: grid;*/
+  height: 100%;
+  width: 100%;
+  /* grid-template-columns: repeat(var(--num-cols), var(--cell-size));
+  grid-template-rows: repeat(var(--num-rows), var(--cell-size)); */
+  overflow: auto; 
 }
 .grid-cell {
   position: absolute;
   width: 100px;
   height: 115px;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
   /* border: solid white 3px; */
   clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
 }
@@ -38,6 +40,7 @@
 }
 #menu-container{
   position: fixed;
+  z-index: 1000;
   width: 45vw;
   max-width: 45vw;
   height:60vh;
@@ -103,6 +106,7 @@
 
 }
 #advance-turn, .claim-cell-btn{
+  z-index: 1000;
   margin: 10px;
   padding: 5px;
   font-size: 0.8rem;

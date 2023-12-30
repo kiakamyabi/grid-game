@@ -46,7 +46,7 @@ const cellFeaturesIndividualPopulationKey = 'individualPopulation';
 //Configs
 const numRows = 25;
 const numCols = 25;
-const cellSize = 59;
+const cellSize = 59.5;
 
 const raceData = {
   //defaultWorkerBaseOutput =
@@ -398,6 +398,7 @@ for (let q = 0; q < rows; q++) {
       //Generates terrain and adds default cell features
       const terrainType = generateTerrain();
       cellFeatures[individualCell.id] = {
+        coordinates: { q, r },
         terrainType,
       };
 
@@ -659,24 +660,46 @@ function openUnclaimedCellMenu(){
 }
 
 function getAdjacentCells(cellId) {
+  //Callback function that takes a cell ID (e.g. cell-2-5) from parameter and will give an array of adjacent hex cells.
+  //Splits id (e.g. cell-2-5) into array of three strings, name(cell), row(2) and column(5).
   const cellIdParts = cellId.split('-');
+  //Creates variables that are integers that represent rows and columns from the array of strings.
   const row = parseInt(cellIdParts[1]);
   const col = parseInt(cellIdParts[2]);
+  //Holds an array of adjacent cells.
   const adjacentCells = [];
+  const isOddRow = row % 2 !== 0;
 
-  for (let i = row - 1; i <= row + 1; i++) {
-    for (let j = col - 1; j <= col + 1; j++) {
-      const adjacentCellId = `cell-${i}-${j}`;
-      if (i >= 0 && i < numRows && j >= 0 && j < numCols && adjacentCellId !== cellId) {
-        adjacentCells.push(adjacentCellId);
-      }
-    }
+  //Relative axial coordinates of the six possible neighbors of a hexagon.
+  const neighbors = [
+    { deltaQ: 0, deltaR: -1 }, // Mid Left
+    { deltaQ: isOddRow ? 1 : -1, deltaR: isOddRow ? 1 : -1 }, // Bottom Right
+    // { deltaQ: 1, deltaR: 1 }, // Bottom Right
+    { deltaQ: 1, deltaR: 0 },  // Bottom Left
+    { deltaQ: 0, deltaR: 1 },  // Mid Right
+    { deltaQ: isOddRow ? -1 : 1, deltaR: isOddRow ? 1 : -1 }, // Top Right
+    // { deltaQ: -1, deltaR: 1 }, // Top Right
+    { deltaQ: -1, deltaR: 0 }, // Top-Left
+  ];
+
+  /*Per loop adds delta of potential neighbouring cell to the coordinates of the selected cell to add all potential neighbouring cells
+   cell ids into an array*/
+  for (const neighbor of neighbors) {
+    const neighborQ = row + neighbor.deltaQ;
+    const neighborR = col + neighbor.deltaR;
+    const adjacentCellId = `cell-${neighborQ}-${neighborR}`;
+    adjacentCells.push(adjacentCellId);
   }
+  
   return adjacentCells;
 }
 
+
 function checkForAdjacentClaimedCell(cellId) {
+  /*Function that uses callback function that returns array of adjacent cells and returns true if an adjacent cell is in
+  playerClaimedCells array.*/
   const adjacentCells = getAdjacentCells(cellId);
+  console.log(adjacentCells)
   for (const adjacentCellId of adjacentCells) {
     if (playerClaimedCells.includes(adjacentCellId)) {
       return true;

@@ -23,3 +23,21 @@ function populationChangePerTurn() {
 
 //in populationChangePerTurn() can use this instead but it is basically the same peformance.
 individualPop.populationMortalityLastTurn = Math.floor(individualPop.populationMortality * individualPop.totalPopulation) || 1;
+
+//For old square grid
+function getAdjacentCells(cellId) {
+  const cellIdParts = cellId.split('-');
+  const row = parseInt(cellIdParts[1]);
+  const col = parseInt(cellIdParts[2]);
+  const adjacentCells = [];
+
+  for (let i = row - 1; i <= row + 1; i++) {
+    for (let j = col - 1; j <= col + 1; j++) {
+      const adjacentCellId = `cell-${i}-${j}`;
+      if (i >= 0 && i < numRows && j >= 0 && j < numCols && adjacentCellId !== cellId) {
+        adjacentCells.push(adjacentCellId);
+      }
+    }
+  }
+  return adjacentCells;
+}
