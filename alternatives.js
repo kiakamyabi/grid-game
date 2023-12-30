@@ -66,18 +66,21 @@ function worldGeneration(){
     root.style.setProperty('--num-cols', numCols);
   };
 
+  
+  //CSS used to make a black border. Uses pseudo element of hexagon to be inside main hexagon to create a border effect.
   [data-terrain="Grass"],[data-terrain="Water"],[data-terrain="Mountain"], [data-terrain="Forest"]{
     background-color: black;
   }
   
-  //CSS used to make a black border. Uses pseudo element of hexagon to be inside main hexagon to create a border effect.
+  
   [data-terrain="Grass"]::before, [data-terrain="Water"]::before, [data-terrain="Mountain"]::before, [data-terrain="Forest"]::before{
     position: absolute;
     content: '';
-    top: 2px;  
-    left: 2px;  
-    height: calc(100% - 4px);  
-    width: calc(100% - 4px);  
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 95%; 
+    width: 95%; 
     clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
   }
   [data-terrain="Grass"]::before {
@@ -94,4 +97,17 @@ function worldGeneration(){
     
   [data-terrain="Forest"]::before {
       background-color: #4caf50;
+  }
+  .claimed{
+      background-color: rgb(240, 174, 20);
+  }
+  .claimed::before{
+    position: absolute;
+    content: '';
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 80%; 
+    width: 80%; 
+    clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
   }
