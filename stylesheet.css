@@ -1,19 +1,10 @@
 :root {
-  --num-rows: 0;
-  --num-cols: 0;
-  /* --cell-size: 100px; */
-
 }
 #game-grid {
-  /* display: grid;*/
-  /* grid-template-columns: repeat(var(--num-cols), var(--cell-size));
-  grid-template-rows: repeat(var(--num-rows), var(--cell-size)); */
   overflow: auto; 
 }
 .grid-cell {
   position: absolute;
-  width: 86.60254px;
-  height: 100px;
   box-sizing: border-box;
   clip-path: polygon(50% 0%, 0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%);
 }

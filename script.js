@@ -45,8 +45,8 @@ const cellFeaturesPopulationKey = 'population';
 const cellFeaturesIndividualPopulationKey = 'individualPopulation';
 //Configs
 const numRows = 25;
-const numCols = 25;
-const cellSize = 51;
+const numCols = 50;
+const cellSize = 100;
 
 const raceData = {
   //defaultWorkerBaseOutput =
@@ -377,26 +377,32 @@ const resourceData = {
 };
 
 function worldGeneration(rows, cols){
-for (let q = 0; q < rows; q++) {
-    for (let r = 0; r < cols; r++) {
+for (let q = 0; q < cols; q++) {
+    for (let r = 0; r < rows; r++) {
       //Creates individual cell as a div
       const individualCell = document.createElement('div');
       //Adds class to each cell
       individualCell.classList.add('grid-cell');
       //Adds id to each cell
-      individualCell.id = `cell-${q}-${r}`;
+      individualCell.id = `cell-${r}-${q}`;
 
       //Calculate hexagon cell position based on q (row) and r (column) coordinates
-      const y = q * 1.5 * cellSize;
-      const x =
-      r * (Math.sqrt(3) * cellSize) + (q % 2) * (Math.sqrt(3) / 2) * cellSize;
+      const x = q * 0.5 * cellSize;
+      const y =
+       r * (Math.sqrt(3) * cellSize) + //Calculate y coordinate based on column (r)
+      (q % 2) * (Math.sqrt(3) / 2) * cellSize; //Introduce vertical offset for every second row
 
       //Set hexagon cell position using CSS
       individualCell.style.left = `${x}px`;
       individualCell.style.top = `${y}px`;
 
-      //Generates terrain and adds default cell features
+      //Set hexagon cell size using CSS
+      individualCell.style.width = `${cellSize}px`;
+      individualCell.style.height = `${cellSize * 1.1547}px`;
+
+      //Generates terrainadds default cell features
       const terrainType = generateTerrain();
+      //Adds default cell features
       cellFeatures[individualCell.id] = {
         coordinates: { q, r },
         terrainType,
@@ -404,12 +410,10 @@ for (let q = 0; q < rows; q++) {
 
       //Adds attribute for terrain to each cell, used in CSS for colouring
       individualCell.setAttribute('data-terrain', terrainType);
-      //Adds cell to grid
+      //Adds cell to div
       gameWorld.appendChild(individualCell);
     }
   }
-  root.style.setProperty('--num-rows', rows);
-  root.style.setProperty('--num-cols', cols);
 };
 
 function generateTerrain() {
@@ -675,11 +679,11 @@ function getAdjacentCells(cellId) {
     { deltaQ: 0, deltaR: -1 }, // Mid Left
     { deltaQ: isOddRow ? 1 : -1, deltaR: isOddRow ? 1 : -1 }, // Bottom Right
     // { deltaQ: 1, deltaR: 1 }, // Bottom Right
-    { deltaQ: 1, deltaR: 0 },  // Bottom Left
+    { deltaQ: 1, deltaR: 0 },  // Top Right+
     { deltaQ: 0, deltaR: 1 },  // Mid Right
     { deltaQ: isOddRow ? -1 : 1, deltaR: isOddRow ? 1 : -1 }, // Top Right
     // { deltaQ: -1, deltaR: 1 }, // Top Right
-    { deltaQ: -1, deltaR: 0 }, // Top-Left
+    { deltaQ: -1, deltaR: 0 }, // Top-Left+
   ];
 
   /*Per loop adds delta of potential neighbouring cell to the coordinates of the selected cell to add all potential neighbouring cells
